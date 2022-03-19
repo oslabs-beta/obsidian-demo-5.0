@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "lib": ["es6", "dom"],
+    "noImplicitAny": true,
+    "target": "es6",
+    "moduleResolution": "deno",
+    "jsx": "react"
+  },
+}
