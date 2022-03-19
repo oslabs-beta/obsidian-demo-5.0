@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
-    "lib": ["es6", "dom"],
-    "noImplicitAny": true,
-    "target": "es6",
+    "lib": [
+      "dom", "es6"
+    ],
+    "allowJs": true,
+    "jsx": "react",
+    "tsx": "react",
     "moduleResolution": "deno",
-    "jsx": "react"
-  },
+    "noImplicitAny": false,
+    "target": "es6"
+  }
 }
