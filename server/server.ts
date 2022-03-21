@@ -1,16 +1,24 @@
-import {Application , Router} from '../serverDeps.ts';
+import { Application, Router, send } from 'https://deno.land/x/oak@v6.0.1/mod.ts';
 
 const app = new Application();
 
 const router = new Router();
 
-router.get('/',(context)=>{
-  context.response.body = 'works';
-})
-.get('/users',(context)=>{
-  context.response.body = 'Users';
+// app.use(router.routes());
+
+app.use(async (context) => {
+  await send(context, context.request.url.pathname, {
+    root: `${Deno.cwd()}/client`,
+    index: 'index.html'
+  });
 });
 
-app.use(router.routes());
+// router.get('/api', (context) => {
+//   context.response.body = 'works';
+//   }).post()
+//   .get('/api/users', (context) => {
+//     context.response.body = 'Users';
+//   });
 
-await app.listen({port:8000});
+
+await app.listen({ port: 8000 });
