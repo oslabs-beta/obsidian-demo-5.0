@@ -1,6 +1,9 @@
-const Main = (props) =>{
+import { React, ReactDom } from '../../deps.ts';
+
+const Main = (props : any) =>{
+  console.log(props);
   return (<div>
-    ${props}
+    {props.data}
   </div>)
 };
 
