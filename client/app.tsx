@@ -1,6 +1,5 @@
-// deno-lint-ignore-file no-explicit-any
-import { React, ReactDOMServer, ObsidianWrapper } from '../deps.ts';
-
+import { React } from '../deps.ts';
+import Main from './components/Main.tsx';
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -13,11 +12,11 @@ declare global {
   }
 }
 
-const App = () => {
-  return (
-    <ObsidianWrapper>
-      <h1>Test</h1>
-    </ObsidianWrapper>
-  )};
+const App = (props:any)=>{
+  return (<div>
+    Finally some new progress
+    <Main data={'Ok, works'} />
+  </div>)
+};
 
-  export default App;
+export default App;
