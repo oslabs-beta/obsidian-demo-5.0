@@ -1,9 +1,9 @@
 import { React } from '../../deps.ts';
 
-const Main = (props : any) =>{
+const Footer = (props : any) =>{
   return (<div>
-    Main
+    Footer
   </div>)
 };
 
-export default Main;
+export default Footer;

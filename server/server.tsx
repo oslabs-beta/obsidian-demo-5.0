@@ -1,8 +1,8 @@
-import { Application, Router, send } from 'https://deno.land/x/oak@v6.0.1/mod.ts';
+import {Application, Router, send , applyGraphQL, gql, GQLError} from '../deps-server.ts';
+import {React, ReactDOMServer, ReactDom} from '../deps.ts';
 import App from '../client/app.tsx';
-import React from "https://jspm.dev/react@17.0.2";
-import ReactDOMServer from "https://jspm.dev/react-dom@17.0.2/server";
-import ReactDOM from "https://jspm.dev/react-dom@17.0.2";
+import {types} from './schemas.ts';
+import { resolvers } from './resolvers.ts';
 
 const app = new Application();
 
@@ -28,13 +28,14 @@ router.get("/", (context:any) => {
        </html>`;
 });
 
-// router.get('/api', (context) => {
-//   context.response.body = 'works';
-//   }).post()
-//   .get('/api/users', (context) => {
-//     context.response.body = 'Users';
-//   });
+const GraphQLService = await applyGraphQL<Router>({
+  Router,
+  typeDefs: types,
+  resolvers: resolvers,
+});
+
+app.use(GraphQLService.routes(), GraphQLService.allowedMethods());
 
 
-await app.listen({ port: 8000 });
+app.listen({ port: 8000 });
 console.log(`server is running on port: 8000`);
