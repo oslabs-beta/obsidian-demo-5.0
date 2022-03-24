@@ -1,0 +1,4 @@
+FROM postgres
+ENV POSTGRES_USER obsidian 
+ENV POSTGRES_PASSWORD codesmith
+ENV POSTGRES_DB plants
