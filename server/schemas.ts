@@ -1,12 +1,12 @@
-import { gql } from '../deps.ts';
+import { gql } from '../serverDeps.ts';
 
-const types = qql`
-  enum PlantMaintenance{
+const types = gql`
+  enum PlantMaintenance {
     LOW
     MEDIUM
     HIGH
   }
-  enum PlantSize{
+  enum PlantSize {
     SMALL
     MEDIUM
     LARGE
@@ -39,18 +39,18 @@ const types = qql`
     maintenance: PlantMaintenance
     size: PlantSize
   }
-  
+
   input CountryInput {
     climate: ClimateType
   }
 
   input AddPlant {
     name: String!
-    maintenance: PlantMaintenance! 
+    maintenance: PlantMaintenance!
     size: PlantSize!
     imgUrl: String!
   }
-  
+
   input AddCountry {
     name: String!
     climate: Climate!
@@ -64,7 +64,7 @@ const types = qql`
   type Mutation {
     addPlant(input: AddPlant!): Plant!
     deletePlant(id: ID!): Plant!
-    addCountry(input: AddCountry!): Country! 
+    addCountry(input: AddCountry!): Country!
   }
 `;
 

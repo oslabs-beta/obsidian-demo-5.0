@@ -1,6 +1,8 @@
 import { Pool } from 'https://deno.land/x/postgres/mod.ts';
 import "https://deno.land/x/dotenv/load.ts";
 
+// import { PoolClient } from 'https://deno.land/x/postgres/client.ts';
+
 let pgPort: number | string | undefined = Deno.env.get('PG_PORT');
 if (typeof pgPort === 'string') {
   pgPort = parseInt(pgPort as string);
@@ -63,7 +65,7 @@ const resolvers = {
   Mutation: {
     addPlant: async(_a: string, { input }: { input: {name: string, maintenance:string, size:string, imgUrl: string}}) => {
       try{
-        const client = await pool.conect();
+        const client = await pool.connect();
         const rows = await client.queryObjectt<{id: number, country_id: number, name: string, maintenance: string, size: number, imgUrl: string}>("INSERT INTO Plants (name, maintenance, size, imgUrl) VALUES ($1, $2, $3, $4) RETURNING *", input.name, input.maintenance, input.size, input.imgUrl)
         client.release();
 
