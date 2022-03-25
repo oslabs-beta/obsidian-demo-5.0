@@ -16,6 +16,7 @@ declare global {
 			span: any;
 			img: any;
       input: any;
+      hr: any;
     }
   }
 }
