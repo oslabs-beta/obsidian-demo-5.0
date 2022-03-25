@@ -2,9 +2,9 @@ import { Pool } from 'https://deno.land/x/postgres/mod.ts';
 // import { PoolClient } from 'https://deno.land/x/postgres/client.ts';
 
 import { sqlTableCreate } from './db-init.js';
-import { filmsData } from './test-data/films.js';
-import { actorsData } from './test-data/actors.js';
-import { actorFilmsData } from './test-data/actor_films.js';
+import { plantsData } from './test-data/plants.js';
+import { countriesData } from './test-data/countries.js';
+import { plantsAndCountriesData } from './test-data/plants_countries.js';
 import 'https://deno.land/x/dotenv/load.ts';
 
 // config db connection
@@ -21,6 +21,7 @@ const config = {
   port: pgPort,
 };
 
+// parallel connections so we can have concurrent access (maybe not needed)
 const POOL_CONNECTIONS = 2; // breaks at 10+ due to ElephantSQL
 
 // connect to db
@@ -55,7 +56,7 @@ export async function createDb() {
   try {
     const client = await pool.connect();
     await client.queryObject({
-      text: filmsData,
+      text: plantsData,
       args: [],
     });
     client.release();
@@ -66,7 +67,7 @@ export async function createDb() {
   try {
     const client = await pool.connect();
     await client.queryObject({
-      text: actorsData,
+      text: countriesData,
       args: [],
     });
     client.release();
@@ -77,7 +78,7 @@ export async function createDb() {
   try {
     const client = await pool.connect();
     await client.queryObject({
-      text: actorFilmsData,
+      text: plantsAndCountriesData,
       args: [],
     });
     client.release();
