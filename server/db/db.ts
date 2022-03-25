@@ -5,9 +5,6 @@ import { sqlTableCreate } from './db-init.js';
 import { plantsData } from './test-data/plants.js';
 import { countriesData } from './test-data/countries.js';
 import { plantsAndCountriesData } from './test-data/plants_countries.js';
-// import { filmsData } from './test-data/films.js';
-// import { actorsData } from './test-data/actors.js';
-// import { actorFilmsData } from './test-data/actor_films.js';
 import 'https://deno.land/x/dotenv/load.ts';
 
 // config db connection
@@ -16,7 +13,6 @@ if (typeof pgPort === 'string') {
   pgPort = parseInt(pgPort as string);
 }
 
-// replaced with plants-specific variables
 const config = {
   user: Deno.env.get('PG_USER'),
   database: Deno.env.get('PG_DATABASE'),
@@ -26,7 +22,7 @@ const config = {
 };
 
 // parallel connections so we can have concurrent access (maybe not needed)
-const POOL_CONNECTIONS = 10; // breaks at 10+ due to ElephantSQL
+const POOL_CONNECTIONS = 2; // breaks at 10+ due to ElephantSQL
 
 // connect to db
 const pool = new Pool(config, POOL_CONNECTIONS);
