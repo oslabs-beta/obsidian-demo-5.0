@@ -1,12 +1,11 @@
 import { React } from '../../deps.ts';
-import { Link } from '../../deps.ts';
 
 const Header = (props : any) =>{
   return (<div>
     Header
     <ul>
       <li>
-        <Link to='/plants'>Plants</Link>
+        {/* <Link to='/plants'>Plants</Link> */}
         {/* <reactRouterDom.Link to='/plants'>Plants</reactRouterDom.Link> */}
       </li>
       <li>
