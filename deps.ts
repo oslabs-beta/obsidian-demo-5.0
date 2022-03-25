@@ -1,11 +1,18 @@
-import React from 'https://jspm.dev/react@17.0.2';
-import ReactDOMServer from 'https://jspm.dev/react-dom@17.0.2/server';
-import ReactDOM from 'https://jspm.dev/react-dom@17.0.2';
+import React from 'https://dev.jspm.io/react';
+import ReactDOMServer from 'https://dev.jspm.io/react-dom/server';
+import ReactDOM from 'https://dev.jspm.io/react-dom';
+// import {
+//   ObsidianWrapper,
+//   useObsidian
+// } from '../obsidian/ObsidianWrapper/ObsidianWrapper.jsx';
+
+// import BrowserCache from '../obsidian/src/Browser/CacheClassBrowser.js';
+
 import {
   ObsidianWrapper,
   useObsidian
-} from './obsidian/ObsidianWrapper/ObsidianWrapper.jsx';
+} from '../obsidian/ObsidianWrapper/ObsidianWrapper.jsx';
 
-import BrowserCache from './obsidian/src/Browser/CacheClassBrowser.js';
+import BrowserCache from '../obsidian/src/Browser/CacheClassBrowser.js';
 
-export { React, ReactDOMServer, ReactDOM };
+export { React, ReactDOMServer, ReactDOM ,ObsidianWrapper, useObsidian, BrowserCache};

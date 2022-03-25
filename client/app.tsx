@@ -19,6 +19,12 @@ declare global {
   }
 }
 
+// const App = (props: any) =>{
+//   return (<div>
+//     <Main />
+//   </div>)
+// }
+
 const App = (props:any) => {
   return (
 	<div>
