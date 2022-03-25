@@ -9,7 +9,6 @@ const Main = (props : any) =>{
   return (<div>
 		<button type="button" className="btn btn-primary btn-lg" onClick={handleClick}>Pull my finger</button>
 	<button type="button" className="btn btn-secondary btn-lg" onClick={handleClick}>Rub my tummy</button>
-		<button onClick={handleClick}>Here's a button</button>
     {props.data}
   </div>)
 };

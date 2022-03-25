@@ -1,9 +1,12 @@
-import { Application, Router, send } from 'https://deno.land/x/oak@v6.0.1/mod.ts';
-import App from './client/App.tsx'
-import { React, ReactDOM, ReactDOMServer } from './deps.ts'
+import { Application, Router, send, ObsidianRouter, gql } from './serverDeps.ts';
+import App from './client/App.tsx';
+import { React, ReactDOM, ReactDOMServer } from './deps.ts';
+import { staticFileMiddleware } from './staticFileMiddleware.ts';
 // import React from "https://jspm.dev/react@17.0.2";
 // import ReactDOMServer from "https://jspm.dev/react-dom@17.0.2/server";
 // import ReactDOM from "https://jspm.dev/react-dom@17.0.2";
+import resolvers from './server/resolvers.ts';
+import types from './server/schema.ts';
 
 const app = new Application();
 const port: number = 8000;
@@ -49,16 +52,27 @@ router.get("/", (context: any) => {
 app.addEventListener("error", (event) => {
   console.error(event.error);
 });
-
-// router.get('/api', (context) => {
-	//   context.response.body = 'works';
-	//   }).post()
-	//   .get('/api/users', (context) => {
-		//     context.response.body = 'Users';
-		//   });
 		
 app.use(router.routes());
+app.use(staticFileMiddleware);
 app.use(router.allowedMethods());
+
+interface ObsRouter extends Router {
+  obsidianSchema?: any;
+}
+// Create GraphQL Router
+const GraphQLRouter = await ObsidianRouter<ObsRouter>({
+  Router,
+  // context: () => console.log('hi, Cameron'),
+  typeDefs: types,
+  resolvers: resolvers,
+  redisPort: 6379,
+  useCache: true,
+  usePlayground: true,
+  // fields used to create the custom entries in the database
+  customIdentifier: ['__typename', 'id'],
+});
+app.use(GraphQLRouter.routes(), GraphQLRouter.allowedMethods());
 
 app.listen({ port });
 console.log(`Server is running on port ${port}`);
