@@ -1,15 +1,32 @@
-import { React, ReactDOM } from '../../deps.ts';
+import { React, ReactDOM ,useObsidian, BrowserCache } from '../../deps.ts';
+import Plants from './Plants/Plants.tsx';
 
 const Main = (props : any) =>{
-	const handleClick = () => {
-		console.log('Testing out javascript functionality')
+	const [plants, setPlants] = (React as any).useState([]);
+	const { query, mutate, cache, setCache, clearCache } = useObsidian();
+
+	const allMoviesQuery = `query {
+    movies {
+      id
+      title
+      genre
+			releaseYear
+			actors {
+				id
+				firstName
+				lastName
+			}
+    }
+  }
+`;
+	const handleClick = async () => { 
+			const result = await query(allMoviesQuery);
+			setPlants(result.data);
 	}
-	
-  console.log(props);
+
   return (<div>
-		<button type="button" className="btn btn-primary btn-lg" onClick={handleClick}>Pull my finger</button>
-	<button type="button" className="btn btn-secondary btn-lg" onClick={handleClick}>Rub my tummy</button>
-    {props.data}
+		<button type='button' onClick={()=>handleClick()}>Get All movies</button>
+		<Plants plants={plants}/>
   </div>)
 };
 
