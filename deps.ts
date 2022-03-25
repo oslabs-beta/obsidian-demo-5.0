@@ -1,20 +1,11 @@
-import React from 'https://dev.jspm.io/react';
-import ReactDOMServer from 'https://dev.jspm.io/react-dom/server';
-import ReactDom from 'https://dev.jspm.io/react-dom';
-import Chart from 'https://dev.jspm.io/chart.js';
-
+import React from 'https://jspm.dev/react@17.0.2';
+import ReactDOMServer from 'https://jspm.dev/react-dom@17.0.2/server';
+import ReactDOM from 'https://jspm.dev/react-dom@17.0.2';
 import {
   ObsidianWrapper,
-  useObsidian,
-  BrowserCache,
-} from 'https://deno.land/x/obsidian/clientMod.ts';
+  useObsidian
+} from './obsidian/ObsidianWrapper/ObsidianWrapper.jsx';
 
-export {
-  BrowserCache,
-  ObsidianWrapper,
-  useObsidian,
-  React,
-  ReactDOMServer,
-  ReactDom,
-  Chart,
-};
+import BrowserCache from './obsidian/src/Browser/CacheClassBrowser.js';
+
+export { React, ReactDOMServer, ReactDOM };
