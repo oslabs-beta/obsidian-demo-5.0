@@ -173,8 +173,23 @@ const resolvers = {
         pool = new Pool(config, POOL_CONNECTIONS);
       }
     },
-    
-    addCountry: async (_a: string, { input}: { input: { climate: string}}) => {
+    deletePlant: async (_a: string, { id }: { id:string }) => {
+      try {
+        const client = await pool.connect();
+        const {rows} = await client.queryObject<{id: number, name: string, maintenance: string, size: string, imgUrl: string}>(
+          'DELETE FROM obsdian_demo_schema.plants WHERE id = $1 RETURNING *;',
+        );
+        client.release();
+        return rows[0];
+      }
+      catch(err) {
+        console.log(err);
+        console.log('resetting connection');
+        pool.end();
+        pool = new Pool(config, POOL_CONNECTIONS);
+      }
+    },
+    addCountry: async (_a: string, { input }: { input: { name: string, climate: string}}) => {
       try {
         const client = await pool.connect();
         const rows = await client.queryObject<{

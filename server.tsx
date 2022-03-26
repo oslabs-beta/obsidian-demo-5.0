@@ -49,7 +49,7 @@ router.get("/", (context: any) => {
 	context.response.body = files["deno:///bundle.js"];
 })
 
-app.addEventListener("error", (event) => {
+app.addEventListener("error", (event: any) => {
   console.error(event.error);
 });
 		
