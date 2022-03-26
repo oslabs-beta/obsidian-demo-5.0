@@ -30,6 +30,7 @@ const types = gql`
     MEDIUM
     HIGH
   }
+	
   enum PlantSize {
     SMALL
     MEDIUM
