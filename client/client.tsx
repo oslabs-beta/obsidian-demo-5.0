@@ -1,4 +1,4 @@
-import { React, ReactDOM, ReactRouterDom } from "../deps.ts";
+import { React, ReactDOM } from "../deps.ts";
 import { App } from './app.tsx';
 
 const { BrowserRouter } = ReactRouterDom;

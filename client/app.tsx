@@ -1,12 +1,9 @@
-import { React , ReactRouterDom} from '../deps.ts';
+import { React } from '../deps.ts';
 import Footer from './components/Footer.tsx';
 import Header from './components/Header.tsx';
 import Main from './components/Main.tsx';
 import { routes } from '../server/routes.ts';
 import { Navbar } from './components/Navbar.tsx';
-
-
-const { Switch, Route } = ReactRouterDom;
 
 declare global {
   namespace JSX {
@@ -96,6 +93,8 @@ const App = (props:any) => {
   </div>
 	)
 };
+
+export default App;
 
   // return (
   //     <React.Suspense fallback={<div>Loading...</div>}>

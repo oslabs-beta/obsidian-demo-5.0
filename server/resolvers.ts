@@ -149,7 +149,7 @@ const resolvers = {
     addPlant: async(_a: string, { input }: { input: {name: string, maintenance:string, size:string, imgUrl: string}}) => {
       try{
         const client = await pool.connect();
-        const rows = await client.queryObjectt<{
+        const rows = await client.queryObject<{
           id: number;
           name: string;
           maintenance: string;

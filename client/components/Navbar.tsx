@@ -1,16 +1,16 @@
-import { React, ReactRouterDom } from "../../deps.ts";
+import { React } from "../../deps.ts";
 
-const { Link } = ReactRouterDom;
+// const { Link } = ReactRouterDom;
 
 export const Navbar = () => {
     return (
         <nav>
             <ul>
                 <li>
-                    <Link to="/">Home</Link>
+                    {/* <Link to="/">Home</Link> */}
                 </li>
                 <li>
-                    <Link to="/plants">About</Link>
+                    {/* <Link to="/plants">About</Link> */}
                 </li>
             </ul>
         </nav>
