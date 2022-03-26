@@ -1,5 +1,17 @@
+<<<<<<< HEAD
 import { React, ReactDOMServer } from '../deps.ts';
+=======
+import { React , ReactRouterDom} from '../deps.ts';
+import Footer from './components/Footer.tsx';
+import Header from './components/Header.tsx';
+>>>>>>> 7b297059eda79fb81fa8264719c9715e04f715c6
 import Main from './components/Main.tsx';
+import { routes } from '../server/routes.ts';
+import { Navbar } from './components/Navbar.tsx';
+
+
+const { Switch, Route } = ReactRouterDom;
+
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -9,16 +21,22 @@ declare global {
       h1: any;
 			h5: any;
       p: any;
+<<<<<<< HEAD
 			nav: any;
 			ul: any;
 			a: any;
 			li: any;
 			span: any;
 			img: any;
+=======
+      li: any;
+      ul: any;
+>>>>>>> 7b297059eda79fb81fa8264719c9715e04f715c6
     }
   }
 }
 
+<<<<<<< HEAD
 const App = (props:any) => {
   return (
 	<div>
@@ -88,5 +106,40 @@ const App = (props:any) => {
   </div>
 	)
 };
+=======
+export const App = ({ isServer, Component, initData }: any) => {
 
-export default App;
+  if (isServer) return (
+      <>
+          <Navbar />
+          <Main />
+      </>
+  )
+>>>>>>> 7b297059eda79fb81fa8264719c9715e04f715c6
+
+  return (
+      <React.Suspense fallback={<div>Loading...</div>}>
+          <Navbar />
+          <Switch>
+              {routes.map((el, x) => {
+                  return <Route
+                      {...el}
+                      key={x}
+                      component={(props: any) => {
+                          let _initData;
+                          if ((window as any).__INITIAL_DATA__) {
+                              _initData = initData;
+                              delete (window as any).__INITIAL_DATA__;
+                          }
+                          if (el.seo) {
+                              //@ts-ignore
+                              document.title = el.seo.title;
+                          }
+                          return <el.component {...props} initData={_initData} />;
+                      }}
+                  />
+              })}
+          </Switch>
+      </React.Suspense>
+  );
+}
