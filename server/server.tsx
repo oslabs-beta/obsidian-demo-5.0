@@ -1,7 +1,7 @@
 import {Application, Router, send , applyGraphQL, gql, GQLError, Dero} from '../deps-server.ts';
 import {React, ReactDOMServer, ReactDom, ReactRouterDom} from '../deps.ts';
 import {App} from '../client/app.tsx';
-import {types} from './schemas.ts';
+import {types} from './schema.ts';
 import { resolvers } from './resolvers.ts';
 import { routes } from './routes.ts';
 
