@@ -1,6 +1,6 @@
-import React from 'https://jspm.dev/react';
-import ReactDOMServer from 'https://jspm.dev/react-dom/server';
-import ReactDOM from 'https://jspm.dev/react-dom';
+import React from 'https://dev.jspm.io/react';
+import ReactDOMServer from 'https://dev.jspm.io/react-dom/server';
+import ReactDOM from 'https://dev.jspm.io/react-dom';
 import { Pool } from 'https://deno.land/x/postgres/mod.ts';
 import {
   ObsidianWrapper,
@@ -15,14 +15,5 @@ declare global {
         }
     }
 }
-// export {
-//   BrowserRouter,
-//   Link,
-//   NavLink,
-//   Route,
-//   Routes,
-//   useNavigate,
-//   useParams,
-// } from "https://esm.sh/react-router-dom@6.2.1?target=deno&pin=v61";
 
 export {React, ReactDOMServer, ReactDOM, Pool, ObsidianWrapper, useObsidian, BrowserCache};

@@ -23,7 +23,7 @@ let pool = new Pool(config, POOL_CONNECTIONS);
 
 const resolvers = {
   Query: {
-    allPlants: async (_a: string, { input }: { input: { maintenance?: string; size?: string }}) => {
+    plants: async (_a: string, { input }: { input: { maintenance?: string; size?: string }}) => {
         try{
             const client = await pool.connect();
             let rows;
@@ -58,7 +58,9 @@ const resolvers = {
                 imgUrl: string;
               }>('SELECT * FROM obsidian_demo_schema.plants');
             }
-            return rows;
+            console.log('(In resolver getting plants');
+            console.log(rows);
+            return rows.rows;
         }
         catch (err){
           console.log(err);
@@ -88,6 +90,7 @@ const resolvers = {
               climate: string;
             }>('SELECT * FROM obsidian_demo_schema.countries');
           }
+					return rows.rows;
       }
       catch(err) {
         console.log(err);
@@ -112,7 +115,7 @@ const resolvers = {
           id
         )
         client.release()
-        return rows;
+        return rows.rows;
       }catch (err) {
         console.log(err);
         console.log('resetting connection');
@@ -135,7 +138,7 @@ const resolvers = {
           WHERE c.id = $1`
         )
         client.release();
-        return rows;
+        return rows.rows;
       }
       catch (err) {
         console.log(err);
@@ -164,7 +167,7 @@ const resolvers = {
         );
         client.release();
 
-        return rows[0]
+        return rows.rows[0]
       }
       catch (err) {
         console.log(err);
@@ -187,7 +190,7 @@ const resolvers = {
           input.climate
         );
         client.release();
-        return rows[0];
+        return rows.rows[0];
       }
       catch (err) {
         console.log(err);

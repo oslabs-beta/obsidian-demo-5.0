@@ -82,7 +82,7 @@ const types = gql`
   }
 
   type Query {
-    allPlants(input: PlantInput): [Plant]!
+    plants(input: PlantInput): [Plant]!
     countries(input: CountryInput): [Country]!
   }
 

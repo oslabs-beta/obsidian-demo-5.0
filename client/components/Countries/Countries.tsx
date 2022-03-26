@@ -1,7 +1,10 @@
 import { React } from '../../../deps.ts';
 
-export const Countries = (props : any) =>{
+const Countries = (props: any) =>{
+
   return (<div>
-    Countries
+    Countries will be here
   </div>)
 };
+
+export default Countries;

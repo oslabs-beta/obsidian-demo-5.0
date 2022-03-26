@@ -1,11 +1,8 @@
-import {Application, Router, send , applyGraphQL, gql, GQLError, Dero} from '../deps-server.ts';
-import {React, ReactDOMServer, ReactDom, ReactRouterDom} from '../deps.ts';
+import {React, ReactDOMServer, ReactDOM } from '../deps.ts';
 import {App} from '../client/app.tsx';
 import {types} from './schema.ts';
 import { resolvers } from './resolvers.ts';
 import { routes } from './routes.ts';
-
-const { StaticRouter, matchPath } = ReactRouterDom;
 
 const app = new Application();
 
