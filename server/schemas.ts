@@ -22,7 +22,7 @@ const types = gql`
 
   type Plant {
     id: ID!
-    country_id: ID!
+    country: Country
     name: String!
     maintenance: PlantMaintenance!
     size: PlantSize!
@@ -58,7 +58,7 @@ const types = gql`
 
   type Query {
     allPlants(input: PlantInput): [Plant]!
-    countries(input: CountryInput): [Country]!
+    country(input: CountryInput): [Country]!
   }
 
   type Mutation {

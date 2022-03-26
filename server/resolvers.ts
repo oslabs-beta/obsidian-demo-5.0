@@ -28,11 +28,35 @@ const resolvers = {
             const client = await pool.connect();
             let rows;
             if (input && input.maintenance) {
-              rows = await client.queryObject<{id: number, country_id: number, name: string, maintenance: string, size: string, imgUrl: string}>("SELECT * FROM Plants WHERE maintenance = $1", input.maintenance)
+              rows = await client.queryObject<{
+                id: number;
+                name: string;
+                maintenance: string;
+                size: string;
+                imgUrl: string;
+              }>(
+                'SELECT * FROM obsidian_demo_schema.plants WHERE maintenance = $1',
+                input.maintenance
+              );
             } else if (input && input.size){
-              rows = await client.queryObject<{id: number, country_id: number, name: string, maintenance: string, size: string, imgUrl: string}>("SELECT * FROM Plants WHERE size = $1", input.size)
+              rows = await client.queryObject<{
+                id: number;
+                name: string;
+                maintenance: string;
+                size: string;
+                imgUrl: string;
+              }>(
+                'SELECT * FROM obsidian_demo_schema.plants WHERE size = $1',
+                input.size
+              );
             } else {
-              rows = await client.queryObject<{id: number, country_id: number, name: string, maintenance: string, size: string, imgUrl: string}>("SELECT * FROM Plants")
+              rows = await client.queryObject<{
+                id: number;
+                name: string;
+                maintenance: string;
+                size: string;
+                imgUrl: string;
+              }>('SELECT * FROM obsidian_demo_schema.plants');
             }
             return rows;
         }
@@ -48,10 +72,21 @@ const resolvers = {
         const client = await pool.connect();
         let rows;
         if (input && input.climate) {
-          rows = await client.queryObject<{id: number, name: string, climate: string}>("SELECT * FROM Countries WHERE climate = $1", input.climate)
+          rows = await client.queryObject<{
+            id: number;
+            name: string;
+            climate: string;
+          }>(
+            'SELECT * FROM obsidian_demo_schema.countries WHERE climate = $1',
+            input.climate
+          );
         }
           else {
-            rows = await client.queryObject<{id: number, name: string, climate: string}>("SELECT * FROM Countries")
+            rows = await client.queryObject<{
+              id: number;
+              name: string;
+              climate: string;
+            }>('SELECT * FROM obsidian_demo_schema.countries');
           }
       }
       catch(err) {
@@ -62,11 +97,71 @@ const resolvers = {
       }
     }
   },
+  Plant: {
+    country: async (_a: string, { id }: { id: string | number}) => {
+      try{
+        const client = await pool.connect()
+        const rows = await client.queryObject<{id: number, name:string, climate: string}>(
+          `SELECT c.* 
+          FROM obsidian_demo_schema.countries AS a
+          INNER JOIN obsidian_demo_schema.plants_countries AS pc
+          ON c.id = pc.plant_id
+          INNER JOIN obsidian_demo_schema.plants as p
+          ON p.id = pc.country_id
+          WHERE c.id = $1`,
+          id
+        )
+        client.release()
+        return rows;
+      }catch (err) {
+        console.log(err);
+        console.log('resetting connection');
+        pool.end();
+        pool = new Pool(config, POOL_CONNECTIONS);
+      }
+    }
+  },
+  Country: {
+    plant: async (_a: string, { input }: { input: string | number }) => {
+      try {
+        const client = await pool.connect();
+        const rows = await client.queryObject<{id: number, name: string, maintenance: string, size: string, imgUrl: string }>(
+          `SELECT p.*
+          FROM obsidian_demo_schema.plants AS p
+          INNER JOIN obsidian_demo_schema.plants_countries AS pc
+          ON p.id = pc.plant_id
+          INNER JOIN obsidian_demo_schema.countries AS c
+          ON c.id = pc.country_id
+          WHERE c.id = $1`
+        )
+        client.release();
+        return rows;
+      }
+      catch (err) {
+        console.log(err);
+        console.log('resetting connection');
+        pool.end();
+        pool = new Pool(config, POOL_CONNECTIONS);
+      }
+    }
+  },
   Mutation: {
     addPlant: async(_a: string, { input }: { input: {name: string, maintenance:string, size:string, imgUrl: string}}) => {
       try{
         const client = await pool.connect();
-        const rows = await client.queryObjectt<{id: number, country_id: number, name: string, maintenance: string, size: number, imgUrl: string}>("INSERT INTO Plants (name, maintenance, size, imgUrl) VALUES ($1, $2, $3, $4) RETURNING *", input.name, input.maintenance, input.size, input.imgUrl)
+        const rows = await client.queryObjectt<{
+          id: number;
+          name: string;
+          maintenance: string;
+          size: number;
+          imgUrl: string;
+        }>(
+          'INSERT INTO obsidian_demo_schema.plants (name, maintenance, size, imgUrl) VALUES ($1, $2, $3, $4) RETURNING *',
+          input.name,
+          input.maintenance,
+          input.size,
+          input.imgUrl
+        );
         client.release();
 
         return rows[0]
@@ -82,7 +177,15 @@ const resolvers = {
     addCountry: async (_a: string, { input}: { input: { climate: string}}) => {
       try {
         const client = await pool.connect();
-        const rows = await client.queryObject<{id: number, name: string, climate: string}>("INSERT INTO Countries (name, climate) VALUES ($1, $2) RETURNING *", input.name, input.climate)
+        const rows = await client.queryObject<{
+          id: number;
+          name: string;
+          climate: string;
+        }>(
+          'INSERT INTO obsidian_demo_schema.countries (name, climate) VALUES ($1, $2) RETURNING *',
+          input.name,
+          input.climate
+        );
         client.release();
         return rows[0];
       }
