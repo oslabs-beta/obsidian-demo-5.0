@@ -28,7 +28,7 @@ const AddContainer = (props: any) => {
 
   return (
     <div style={style} className="card h-100">
-      <div >
+      <div className="card-body p-4">
         <p >Add Plant</p>
         <label htmlFor="name">Name</label>
         <input

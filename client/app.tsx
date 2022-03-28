@@ -1,7 +1,7 @@
 import { React, ReactDOMServer, ObsidianWrapper } from '../deps.ts';
 import Main from './components/Main.tsx';
 import Plants from './components/Plants/Plants.tsx';
-import AddContainer from './components/Product.tsx';
+import AddContainer from './components/AddContainer.tsx';
 declare global {
   namespace JSX {
     interface IntrinsicElements {
