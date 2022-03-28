@@ -10,7 +10,7 @@ const Plant = (props: any) => {
         <div>Name : {name}</div>
         <div>Maintenance : {maintenance}</div>
         <div>Size : {size}</div>
-        <button onClick={()=>props.deletePlant(id)}>Delete Plant</button>
+        <button className='btn btn-primary' onClick={()=>props.deletePlant(id)}>Delete Plant</button>
       </div>
     </div>
   </div>)

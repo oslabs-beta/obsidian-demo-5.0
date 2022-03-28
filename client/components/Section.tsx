@@ -58,7 +58,7 @@ export const Section = (props: any) => {
 const deletePlant = async (id:any) =>{
     console.log('Plant was deleted', id)
     const deletePlantMutation = `mutation {
-        plant(id:${id}) {
+        deletePlant(id:${id}) {
           id
           name
         }
@@ -66,6 +66,10 @@ const deletePlant = async (id:any) =>{
     `;
     const res = await mutate(deletePlantMutation);    
     console.log('Here\'s the delete mutation response: ', res);
+		const deletedPlant = res.data.deletePlant;
+		setPlants(plants.filter((plant) => {
+			return plant.id !== id
+		}))
 }
   const getAllPlants = async () => {
     const result = await query(allPlantsQuery);
