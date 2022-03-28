@@ -1,5 +1,7 @@
 import { React, ReactDOMServer, ObsidianWrapper } from '../deps.ts';
 import Main from './components/Main.tsx';
+import Plants from './components/Plants/Plants.tsx';
+import AddContainer from './components/Product.tsx';
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -17,13 +19,15 @@ declare global {
 			img: any;
       input: any;
       hr: any;
+      label: any;
     }
   }
 }
 
 const App = (props: any) =>{
   return (<ObsidianWrapper>
-    <Main />
+    {/* <Main /> */}
+    <AddContainer />
   </ObsidianWrapper>)
 };
 
