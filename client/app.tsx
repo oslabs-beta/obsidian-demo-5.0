@@ -26,7 +26,7 @@ declare global {
 
 const App = (props: any) =>{
   return (<ObsidianWrapper>
-    {/* <Main /> */}
+    <Main />
     <AddContainer />
   </ObsidianWrapper>)
 };

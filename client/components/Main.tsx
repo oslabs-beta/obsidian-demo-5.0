@@ -31,31 +31,26 @@ const Main = (props : any) => {
 	const { query, mutate, cache, setCache, clearCache } = useObsidian();
 
 	const allMoviesQuery = `query {
-    movies {
-      id
-      title
-      genre
-			releaseYear
-			actors {
-				id
-				firstName
-				lastName
-			}
+    plants {
+      name
+      size
     }
   }
 `;
 	const handleClick = async () => { 
 			const result = await query(allMoviesQuery);
-			setPlants(result.data);
+			console.log('Result');
+			console.log(result);
+			//setPlants(result.data);
 	}
 
   return (<div>
-		<Nav />
-		<Header />
-		<Section />
-		<Footer />
+		{/* <Nav /> */}
+		{/* <Header /> */}
+		{/* <Section /> */}
+		{/* <Footer /> */}
 		<button type='button' onClick={()=>handleClick()}>Get All movies</button>
-		<Plants plants={plants}/>
+		{/* <Plants plants={plants}/> */}
   </div>)
 };
 

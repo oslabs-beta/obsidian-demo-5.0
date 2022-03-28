@@ -7,6 +7,7 @@ import { staticFileMiddleware } from './staticFileMiddleware.ts';
 // import ReactDOM from "https://jspm.dev/react-dom@17.0.2";
 import resolvers from './server/resolvers.ts';
 import types from './server/schema.ts';
+import { createDb } from './server/db/db.ts';
 
 const app = new Application();
 const port: number = 8000;
@@ -19,6 +20,7 @@ const { files, diagnostics } = await Deno.emit('./server/client.tsx', {
   bundle: "module",
   // compilerOptions: { lib: ["dom", "dom.iterable", "esnext"] },
 })
+createDb();
 
 console.log('Here\'s the diagnostics file: ', diagnostics);
 
