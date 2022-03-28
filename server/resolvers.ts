@@ -537,7 +537,7 @@ const resolvers = {
                 name: string;
                 maintenance: string;
                 size: string;
-                imgUrl: string;
+                imageurl: string;
               }>(
                 'SELECT * FROM obsidian_demo_schema.plants WHERE maintenance = $1',
                 input.maintenance
@@ -548,7 +548,7 @@ const resolvers = {
                 name: string;
                 maintenance: string;
                 size: string;
-                imgUrl: string;
+                imageurl: string;
               }>(
                 'SELECT * FROM obsidian_demo_schema.plants WHERE size = $1',
                 input.size
@@ -559,7 +559,7 @@ const resolvers = {
                 name: string;
                 maintenance: string;
                 size: string;
-                imgUrl: string;
+                imageurl: string;
               }>('SELECT * FROM obsidian_demo_schema.plants');
             }
             console.log('(In resolver getting plants');
@@ -608,16 +608,16 @@ const resolvers = {
     country: async (_a: string, { id }: { id: string | number}) => {
       try{
         const client = await pool.connect()
-        const rows = await client.queryObject<{id: number, name:string, climate: string}>(
-          `SELECT c.* 
-          FROM obsidian_demo_schema.countries AS a
+        const rows = await client.queryObject<{id: number, name:string, climate: string}>({
+          text: `SELECT c.* 
+          FROM obsidian_demo_schema.countries AS c
           INNER JOIN obsidian_demo_schema.plants_countries AS pc
           ON c.id = pc.plant_id
           INNER JOIN obsidian_demo_schema.plants as p
           ON p.id = pc.country_id
           WHERE c.id = $1`,
-          id
-        )
+          args: [id]
+        })
         client.release()
         return rows.rows;
       }catch (err) {
@@ -632,7 +632,7 @@ const resolvers = {
     plant: async (_a: string, { input }: { input: string | number }) => {
       try {
         const client = await pool.connect();
-        const rows = await client.queryObject<{id: number, name: string, maintenance: string, size: string, imgUrl: string }>(
+        const rows = await client.queryObject<{id: number, name: string, maintenance: string, size: string, imageurl: string }>(
           `SELECT p.*
           FROM obsidian_demo_schema.plants AS p
           INNER JOIN obsidian_demo_schema.plants_countries AS pc
@@ -653,26 +653,62 @@ const resolvers = {
     }
   },
   Mutation: {
-    addPlant: async(_a: string, { input }: { input: {name: string, maintenance:string, size:string, imgUrl: string}}) => {
+    addPlant: async(_a: string, { input }: { input: {name: string, maintenance:string, size:string, imageurl: string}}) => {
       try{
+        console.log('In the resolver: ', input.name, input.maintenance, input.size, input.imageurl)
         const client = await pool.connect();
         const rows = await client.queryObject<{
           id: number;
           name: string;
           maintenance: string;
-          size: number;
-          imgUrl: string;
-        }>(
-          'INSERT INTO obsidian_demo_schema.plants (name, maintenance, size, imgUrl) VALUES ($1, $2, $3, $4) RETURNING *',
-          input.name,
-          input.maintenance,
-          input.size,
-          input.imgUrl
+          size: string;
+          imageurl: string;
+        }>({
+
+          text: 'INSERT INTO obsidian_demo_schema.plants (name, maintenance, size, imageurl) VALUES ($1, $2, $3, $4) RETURNING *',
+          args: [input.name,
+            input.maintenance,
+            input.size,
+            input.imageurl],
+        }
         );
         client.release();
-
         return rows.rows[0]
       }
+      catch (err) {
+        console.log(err);
+        console.log('resetting connection');
+        pool.end();
+        pool = new Pool(config, POOL_CONNECTIONS);
+      }
+    },
+
+    deletePlant: async(_a: string, { id }: { id: string}) => {
+      try {
+        const client = await pool.connect();
+
+        const {rows} = await client.queryObject<{
+          id: number;
+          name: string;
+          maintenance: string;
+          size: string;
+          imageurl: string;
+        }>({
+          text: `
+            DELETE FROM obsidian_demo_schema.plants
+            WHERE id = $1
+            RETURNING *;
+          `,
+          args: [id],
+        });
+
+        client.release();
+
+        const deletedPlant = rows[0];
+
+        return deletedPlant;
+      }
+
       catch (err) {
         console.log(err);
         console.log('resetting connection');

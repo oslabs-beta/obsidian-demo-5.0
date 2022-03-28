@@ -1,85 +1,3 @@
-// import { gql } from '../serverDeps.ts';
-
-// // can anybody tell me if this tag needs the TS any declaration?
-// // const types = (gql as any)`
-// const types = gql`
-//   enum MovieGenre {
-//     ACTION
-//     SCIFI
-//     DRAMA
-//     COMEDY
-//     ROMANCE
-//     ADVENTURE
-//   }
-//   enum ReleaseYearOrder {
-//     ASC
-//     DESC
-//   }
-//   enum RespType {
-//     MOVIE
-//     ACTOR
-//   }
-
-//   union ActorOrMovie = Actor | Movie
-  
-//   type Movie {
-//     id: ID!
-//     title: String!
-//     releaseYear: Int!
-//     actors: [Actor!]!
-//     genre: MovieGenre!
-//   }
-//   type Actor {
-//     id: ID!
-//     firstName: String!
-//     lastName: String!
-//     nickname: String
-//     movies: [Movie!]!
-//   }
-//   input MovieInput {
-//     genre: MovieGenre
-//     order: ReleaseYearOrder
-//     actor: ID
-//   }
-//   input ActorInput {
-//     film: ID
-//     actor: ID
-//   }
-//   input NewMovieInput {
-//     title: String!
-//     releaseYear: Int!
-//     genre: MovieGenre!
-//   }
-//   input NewActorInput {
-//     firstName: String!
-//     lastName: String!
-//     nickname: String
-//   }
-//   input AssociateActorAndMovieInput {
-//     movieId: ID!
-//     actorId: ID!
-//     respType: RespType!
-//   }
-//   input UpdateNicknameInput {
-//     actorId: ID!
-//     nickname: String!
-//   }
-//   type Query {
-//     movies(input: MovieInput): [Movie]!
-//     actors(input: ActorInput): [Actor]!
-//   }
-//   type Mutation {
-//     addMovie(input: NewMovieInput!): Movie!
-//     deleteMovie(id: ID!): Movie!
-//     addActor(input: NewActorInput!): Actor!
-//     deleteActor(id: ID!): Actor!
-//     associateActorWithMovie(input: AssociateActorAndMovieInput!): ActorOrMovie
-//     updateNickname(input: UpdateNicknameInput!): Actor!
-//   }
-// `;
-
-// export default types;
-
 import { applyGraphQL, gql, GQLError } from "https://deno.land/x/oak_graphql/mod.ts";
 
 // export const types = gql`
@@ -123,7 +41,7 @@ const types = gql`
     DRY
     TEMPERATE
     CONTINENTAL
-    POLAR
+    POLA
   }
   type Plant {
     id: ID!
@@ -131,13 +49,13 @@ const types = gql`
     name: String!
     maintenance: String!
     size: String!
-    imgUrl: String!
+    imageurl: String!
   }
   type Country {
-    id: ID!
+    id: ID
 		plant: Plant
-    name: String!
-    climate: String!
+    name: String
+    climate: String
   }
   input PlantInput {
     maintenance: String
@@ -150,7 +68,7 @@ const types = gql`
     name: String!
     maintenance: String!
     size: String!
-    imgUrl: String!
+    imageurl: String!
   }
   input AddCountry {
     name: String!
@@ -161,7 +79,7 @@ const types = gql`
     countries(input: CountryInput): [Country]!
   }
   type Mutation {
-    addPlant(input: AddPlant!): Plant!
+    addPlant(input: AddPlant!): Plant
     deletePlant(id: ID!): Plant!
     addCountry(input: AddCountry!): Country!
   }

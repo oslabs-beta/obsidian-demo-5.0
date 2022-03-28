@@ -1,7 +1,7 @@
 import { React, ReactDOMServer, ObsidianWrapper } from '../deps.ts';
 import Main from './components/Main.tsx';
 import Plants from './components/Plants/Plants.tsx';
-import AddContainer from './components/AddContainer.tsx';
+import AddPlant from './components/AddPlant.tsx';
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -21,13 +21,12 @@ declare global {
       hr: any;
       label: any;
     }
-  }
+  } 
 }
 
 const App = (props: any) =>{
   return (<ObsidianWrapper>
     <Main />
-    <AddContainer />
   </ObsidianWrapper>)
 };
 
