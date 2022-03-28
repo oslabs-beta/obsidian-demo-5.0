@@ -17,7 +17,7 @@ const types = gql`
     DRY
     TEMPERATE
     CONTINENTAL
-    POLAR
+    POLA
   }
   type Plant {
     id: ID!
@@ -25,13 +25,13 @@ const types = gql`
     name: String!
     maintenance: String!
     size: String!
-    imgUrl: String!
+    imageurl: String!
   }
   type Country {
-    id: ID!
+    id: ID
 		plant: Plant
-    name: String!
-    climate: String!
+    name: String
+    climate: String
   }
   input PlantInput {
     maintenance: String
@@ -44,7 +44,7 @@ const types = gql`
     name: String!
     maintenance: String!
     size: String!
-    imgUrl: String!
+    imageurl: String!
   }
   input AddCountry {
     name: String!
@@ -55,7 +55,7 @@ const types = gql`
     countries(input: CountryInput): [Country]!
   }
   type Mutation {
-    addPlant(input: AddPlant!): Plant!
+    addPlant(input: AddPlant!): Plant
     deletePlant(id: ID!): Plant!
     addCountry(input: AddCountry!): Country!
   }

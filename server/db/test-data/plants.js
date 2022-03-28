@@ -1,7 +1,7 @@
 export const plantsData = `
 INSERT INTO obsidian_demo_schema.plants (id, name, maintenance, size, imageUrl)
 VALUES
-('1' ,'Whale Fin SansevieriaTESTINGGGG', 'Low', 'Medium', 'https://bloomscape.com/wp-content/uploads/2021/12/Bloomscape_SansevieriaMasoniana_medium_Charcoal-324x405.jpg?ver=640205'),
+('10' ,'Whale Fin Sansevieria', 'Low', 'Medium', 'https://bloomscape.com/wp-content/uploads/2021/12/Bloomscape_SansevieriaMasoniana_medium_Charcoal-324x405.jpg?ver=640205'),
 ('2', 'Bamboo Palm', 'Low', 'Large', 'https://bloomscape.com/wp-content/uploads/2020/08/bloomscape_bamboo-palm_stone-1-324x396.jpg?ver=279689'),
 ('3', 'Money Tree', 'Medium', 'Large', 'https://bloomscape.com/wp-content/uploads/2020/08/bloomscape_money-tree_slate-e1643402075928-324x389.jpg?ver=279409'),
 ('4', 'Bromeliad Pineapple', 'Low', 'Medium', 'https://bloomscape.com/wp-content/uploads/2020/08/bloomscape_bromeliad-pineapple_indigo-e1628794021645-324x389.jpg?ver=279193'),

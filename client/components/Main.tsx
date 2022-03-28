@@ -27,29 +27,13 @@ declare global {
 }
 
 const Main = (props : any) => {
-	const [plants, setPlants] = (React as any).useState([]);
-	const { query, mutate, cache, setCache, clearCache } = useObsidian();
-
-	const allMoviesQuery = `query {
-    plants {
-      name
-      size
-    }
-  }
-`;
-	const handleClick = async () => { 
-			const result = await query(allMoviesQuery);
-			console.log('Result');
-			console.log(result);
-			//setPlants(result.data);
-	}
 
   return (<div>
-		{/* <Nav /> */}
-		{/* <Header /> */}
-		{/* <Section /> */}
-		{/* <Footer /> */}
-		<button type='button' onClick={()=>handleClick()}>Get All movies</button>
+		<Nav />
+		<Header />
+		<Section />
+		<Footer />
+		{/* <button type='button' onClick={()=>handleClick()}>Get All movies</button> */}
 		{/* <Plants plants={plants}/> */}
   </div>)
 };

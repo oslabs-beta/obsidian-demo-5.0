@@ -1,25 +1,25 @@
 import { React } from "../../deps.ts";
+import {useObsidian} from '../../deps.ts';
 
 const AddContainer = (props: any) => {
+  const { query, mutate, cache, setCache, clearCache } = useObsidian();
   const [name, setName] = (React as any).useState("");
-  const [maintance, setMaintance] = (React as any).useState("");
+  const [maintenance, setMaintenance] = (React as any).useState("");
   const [size, setSize] = (React as any).useState("");
-  const [url, setUrl] = (React as any).useState("");
+  const [imageurl, setImageurl] = (React as any).useState("");
 
-  const onAdd = () => {
-    const obj = {
-      name: "",
-      maintance: "",
-      size: "",
-      url: "",
-    };
-    obj.name = name;
-    obj.maintance = maintance;
-    obj.size = size;
-    obj.url = url;
-    console.log("So this is our data");
-    console.log(obj);
-  };
+  const addPlantQuery = `mutation {
+    addPlant(input: {name: "${name}", maintenance: "${maintenance}", size: "${size}", imageurl: "${imageurl}"}) {
+      id
+      country {
+        name
+      }
+      name
+      maintenance
+      size
+      imageurl
+    }
+  }`;
 
   const style = {
     display: "flex",
@@ -27,51 +27,28 @@ const AddContainer = (props: any) => {
   };
 
   return (
-    <div style={style} className="card h-100">
-      <div className="card-body p-4">
-        <p >Add Plant</p>
-        <label htmlFor="name">Name</label>
-        <input
-          id="name"
-          onChange={(e: any) => {
-            setName(e.target.value);
-          }}
-          type="text"
-        />
-        <label htmlFor="maintance">Maintance</label>
-        <input
-          id="maintance"
-          onChange={(e: any) => {
-            setMaintance(e.target.value);
-          }}
-          type="text"
-        />
-        <label htmlFor="size">Size</label>
-        <input
-          id="nasizeme"
-          onChange={(e: any) => {
-            setSize(e.target.value);
-          }}
-          type="text"
-        />
-        <label htmlFor="url">Url</label>
-        <input
-          id="url"
-          onChange={(e: any) => {
-            setUrl(e.target.value);
-          }}
-          type="text"
-        />
-        <button
-          onClick={() => {
-            onAdd();
-          }}
-        >
-          Create Plant
-        </button>
-      </div>
+<form>
+  <div className="form-row">
+    <div className="col-md-4 mb-3">
+      <label htmlFor="validationDefault01">Name</label>
+      <input type="text" className="form-control" value={name} required onChange={(e: any) => setName(e.target.value)} />
     </div>
-  );
+    <div className="col-md-4 mb-3">
+      <label htmlFor="validationDefault02">Maintenance</label>
+      <input type="text" className="form-control" value={maintenance} required onChange={(e: any) => setMaintenance(e.target.value)} />
+    </div>
+    <div className="col-md-4 mb-3">
+      <label htmlFor="validationDefault02">Size</label>
+      <input type="text" className="form-control" value={size} required onChange={(e: any) => setSize(e.target.value)}/>
+    </div>
+    <div className="col-md-4 mb-3">
+      <label htmlFor="validationDefault02">Image URL</label>
+      <input type="text" className="form-control" value={imageurl} required onChange={(e: any) => setImageurl(e.target.value)} />
+    </div>
+  </div>
+  <button className="btn btn-primary" type="submit" onClick={props.addPlant}>Submit form</button>
+</form>
+);
 };
 
 export default AddContainer;
