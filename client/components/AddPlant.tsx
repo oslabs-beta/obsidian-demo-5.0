@@ -3,44 +3,6 @@ import {useObsidian} from '../../deps.ts';
 
 const AddContainer = (props: any) => {
   const { query, mutate, cache, setCache, clearCache } = useObsidian();
-  // const [name, setName] = (React as any).useState("");
-  // const [maintenance, setMaintenance] = (React as any).useState("");
-  // const [size, setSize] = (React as any).useState("");
-  // const [imageurl, setImageurl] = (React as any).useState("");
-
-  // const addPlantQuery = `mutation {
-  //   addPlant(input: {name: "${name}", maintenance: "${maintenance}", size: "${size}", imageurl: "${imageurl}"}) {
-  //     id
-  //     country {
-  //       name
-  //     }
-  //     name
-  //     maintenance
-  //     size
-  //     imageurl
-  //   }
-  // }`;
-
-  // const addPlant = async (e: any) => {
-  //   // const obj = {
-  //   //   name: "",
-  //   //   maintenance: "",
-  //   //   size: "",
-  //   //   imageurl: "",
-  //   // };
-  //   // obj.name = name;
-  //   // obj.maintenance = maintenance;
-  //   // // obj.size = size;
-  //   // // obj.imageurl = imageurl;
-  //   // console.log("So this is our data");
-  //   // console.log(obj);
-  //   // e.preventDefault();
-  //   e.preventDefault();
-  //   console.log(addPlantQuery)
-  //   const res = await mutate(addPlantQuery);
-  //   console.log('Here\'s the result from adding: ', res)
-
-  // };
 
   const style = {
     display: "flex",
@@ -68,7 +30,7 @@ const AddContainer = (props: any) => {
     </div>
   </div>
   <div className="col text-center">
-  <button className="btn btn-primary" type="submit" onClick={props.addPlant}>Submit form</button>
+  <button className="btn btn-primary" type="submit" onClick={props.addPlant}>Add Plant</button>
   </div>
 </form>
 );

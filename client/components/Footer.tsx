@@ -23,8 +23,8 @@ declare global {
 
 export const Footer = (props:any) => {
 	return (
-		<footer className="py-5 bg-dark">
-		<div className="container"><p className="m-0 text-center text-white">Copyright &copy; Your Website 2022</p></div>
-</footer>
+		<footer className="py-5 bg-dark m-0">
+			<div className="container"><p className="m-0 text-center text-white">Copyright &copy; Obsidian 2022</p></div>
+		</footer>
 	)
 }

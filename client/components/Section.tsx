@@ -24,6 +24,8 @@ declare global {
 }
 
 export const Section = (props: any) => {
+	// pull up state to here and pass down
+	// pass down setStates to addPlant
   const [plants, setPlants] = (React as any).useState([]);
   const { query, mutate, cache, setCache, clearCache } = useObsidian();
   const [name, setName] = (React as any).useState("");
@@ -31,19 +33,7 @@ export const Section = (props: any) => {
   const [size, setSize] = (React as any).useState("");
   const [imageurl, setImageurl] = (React as any).useState("");
 
-  const addPlantQuery = `mutation {
-    addPlant(input: {name: "${name}", maintenance: "${maintenance}", size: "${size}", imageurl: "${imageurl}"}) {
-      id
-      country {
-        name
-      }
-      name
-      maintenance
-      size
-      imageurl
-    }
-  }`;
-
+	// GQL QUERIES
   const allPlantsQuery = `query {
     plants {
       id
@@ -51,12 +41,72 @@ export const Section = (props: any) => {
       size
       maintenance
       imageurl
-    }
-  } 
-`;
+    	}
+  	} 
+	`;
 
-const deletePlant = async (id:any) =>{
-    console.log('Plant was deleted', id)
+	const lowMaintenancePlantsQuery = `query {
+		plants(input: {maintenance: "Low"}) {
+			id
+			name
+			size
+			maintenance
+			imageurl
+		}
+	}`
+
+	const largePlantsQuery = `query {
+		plants(input: {size: "Large"}) {
+			id
+			name
+			size
+			maintenance
+			imageurl
+		}
+	}`
+
+	// GQL MUTATIONS
+	const addPlantQuery = `mutation {
+		addPlant(input: {name: "${name}", maintenance: "${maintenance}", size: "${size}", imageurl: "${imageurl}"}) {
+			id
+			country {
+				name
+			}
+			name
+			maintenance
+			size
+			imageurl
+		}
+	}`;
+
+	// QUERY HANDLE CLICKS
+  const getAllPlants = async () => {
+    const result = await query(allPlantsQuery);
+    setPlants(result.data.plants);
+  };
+
+	const getLowMaintenancePlants = async() => {
+		const result = await query(lowMaintenancePlantsQuery)
+		setPlants(result.data.plants);
+	}
+
+	const getLargePlants = async() => {
+		const result = await query(largePlantsQuery)
+		setPlants(result.data.plants);
+	}
+
+	// MUTATION HANDLE CLICKS
+  const addPlant = async (e: any) => {
+    e.preventDefault();
+    console.log(addPlantQuery)
+    const res = await mutate(addPlantQuery);
+    // get the new plant
+    const newPlant = res.data.addPlant;
+    // copy the old plants and add the new one
+    await setPlants([...plants, newPlant]);
+  };
+
+	const deletePlant = async (id:any) => {
     const deletePlantMutation = `mutation {
         deletePlant(id:${id}) {
           id
@@ -65,37 +115,23 @@ const deletePlant = async (id:any) =>{
       } 
     `;
     const res = await mutate(deletePlantMutation);    
-    console.log('Here\'s the delete mutation response: ', res);
 		const deletedPlant = res.data.deletePlant;
 		setPlants(plants.filter((plant) => {
 			return plant.id !== id
 		}))
-}
-  const getAllPlants = async () => {
-    const result = await query(allPlantsQuery);
-    // console.log(result)
-    console.log('Here\'s the plants back from the query: ', result.data);
-    setPlants(result.data.plants);
-  };
+	}
 
-  const addPlant = async (e: any) => {
-    e.preventDefault();
-    console.log(addPlantQuery)
-    const res = await mutate(addPlantQuery);
-    // pull out the new plant from the response
-    const newPlant = res.data.addPlant;
-    // copy the old plants and add the new one
-    await setPlants([...plants, newPlant]);
-  }; 
+
 
   return (
-    <div>
+		<div className='bg-dark text-light m-0'>
         <AddPlant addPlant={addPlant} name={name} setName={setName} maintenance={maintenance} setMaintenance={setMaintenance} size={size} setSize={setSize} imageurl={imageurl} setImageurl={setImageurl} />
-        <Plants plants={plants} deletePlant = {deletePlant} />
         <div className="text-center my-2">
-
-      <button className="btn btn-primary" onClick={getAllPlants}>Get plants</button>
+      		<button className="btn btn-outline-primary" onClick={getAllPlants}>All Plants</button>
+      		<button className="btn btn-outline-primary mx-2" onClick={getLowMaintenancePlants}>Low Maintenance Plants</button>
+      		<button className="btn btn-outline-primary" onClick={getLargePlants}>Large Plants</button>
         </div>
+        <Plants plants={plants} deletePlant = {deletePlant} />
     </div>
   );
 };

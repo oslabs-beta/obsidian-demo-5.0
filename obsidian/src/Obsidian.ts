@@ -102,6 +102,7 @@ export async function ObsidianRouter<T>({
             (t1 - t0) +
             ' milliseconds.', "background: #222; color: #00FF00"
           );
+					// chrome.runtime.sendMessage('mjlkdebdclaakhcdbaapleegkoehnboj', {'obsidianRouter cacheHitResponseTime': t1 - t0});
         }
 
       };      // If not in cache: 

@@ -51,7 +51,6 @@ function ObsidianWrapper(props) {
 			// when the developer decides to only utilize whole query for cache
 			if (wholeQuery) resObj = await cache.readWholeQuery(query);
 			else resObj = await cache.read(query);
-			console.log('query function resObj: ', resObj)
 			// check if query is stored in cache
 			if (resObj) {
 				// returning cached response as a promise
@@ -184,7 +183,6 @@ function ObsidianWrapper(props) {
 					}
 					// always write/over-write to cache (add/update)
 					// GQL call to make changes and synchronize database
-					console.log('WriteThrough - true ', responseObj);
 					const addOrUpdateMutationResponseTime = Date.now() - startTime;
 					chrome.runtime.sendMessage('mjlkdebdclaakhcdbaapleegkoehnboj', {'addOrUpdateMutationResponseTime': addOrUpdateMutationResponseTime});
 					return responseObj;
@@ -213,7 +211,6 @@ function ObsidianWrapper(props) {
 				}
 				// third behaviour just for normal update (no-delete, no update function)
 				cache.write(mutation, responseObj);
-				console.log('WriteThrough - false ', responseObj);
 				return responseObj;
 			}
 		} catch (e) {

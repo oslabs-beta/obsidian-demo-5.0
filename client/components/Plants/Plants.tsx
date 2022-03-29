@@ -12,7 +12,7 @@ const Plants = (props: any) =>{
     return <Plant key={plant.id} plant={plant} deletePlant={props.deletePlant}/>
   });
 
-  return (<div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+  return (<div className="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center mx-2 my-4">
     {arrOfPlants}
   </div>)
 };

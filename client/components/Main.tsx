@@ -28,14 +28,12 @@ declare global {
 
 const Main = (props : any) => {
 
-  return (<div>
+  return (<>
 		<Nav />
 		<Header />
 		<Section />
 		<Footer />
-		{/* <button type='button' onClick={()=>handleClick()}>Get All movies</button> */}
-		{/* <Plants plants={plants}/> */}
-  </div>)
+  </>)
 };
 
 export default Main;
