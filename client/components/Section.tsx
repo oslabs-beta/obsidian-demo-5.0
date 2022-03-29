@@ -121,8 +121,6 @@ export const Section = (props: any) => {
 		}))
 	}
 
-
-
   return (
 		<div className='bg-dark text-light m-0'>
         <AddPlant addPlant={addPlant} name={name} setName={setName} maintenance={maintenance} setMaintenance={setMaintenance} size={size} setSize={setSize} imageurl={imageurl} setImageurl={setImageurl} />
