@@ -8,6 +8,7 @@ import { staticFileMiddleware } from './staticFileMiddleware.ts';
 import resolvers from './server/resolvers.ts';
 import types from './server/schema.ts';
 import { createDb } from './server/db/db.ts';
+import { oakCors } from "https://deno.land/x/cors/mod.ts";
 
 const app = new Application();
 const port: number = 8000;
@@ -55,6 +56,7 @@ app.addEventListener("error", (event) => {
   console.error(event.error);
 });
 		
+app.use(oakCors());
 app.use(router.routes());
 app.use(staticFileMiddleware);
 app.use(router.allowedMethods());

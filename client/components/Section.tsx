@@ -69,15 +69,12 @@ export const Section = (props: any) => {
 	const addPlantQuery = `mutation {
 		addPlant(input: {name: "${name}", maintenance: "${maintenance}", size: "${size}", imageurl: "${imageurl}"}) {
 			id
-			country {
-				name
-			}
 			name
 			maintenance
 			size
 			imageurl
 		}
-	}`;
+	}`
 
 	// QUERY HANDLE CLICKS
   const getAllPlants = async () => {

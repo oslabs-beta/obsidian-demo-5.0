@@ -62,6 +62,7 @@ const resolvers = {
             }
             console.log('(In resolver getting plants');
             console.log(rows.rows);
+						await client.release()
             return rows.rows;
         }
         catch (err){
@@ -102,54 +103,54 @@ const resolvers = {
       }
     }
   },
-  Plant: {
-    country: async (_a: string, { id }: { id: string | number}) => {
-      try{
-        const client = await pool.connect()
-        const rows = await client.queryObject<{id: number, name:string, climate: string}>({
-          text: `SELECT c.* 
-          FROM obsidian_demo_schema.countries AS c
-          INNER JOIN obsidian_demo_schema.plants_countries AS pc
-          ON c.id = pc.plant_id
-          INNER JOIN obsidian_demo_schema.plants as p
-          ON p.id = pc.country_id
-          WHERE c.id = $1`,
-          args: [id]
-        })
-        client.release()
-        return rows.rows;
-      }catch (err) {
-        console.log(err);
-        console.log('resetting connection');
-        pool.end();
-        pool = new Pool(config, POOL_CONNECTIONS);
-      }
-    }
-  },
-  Country: {
-    plant: async (_a: string, { input }: { input: string | number }) => {
-      try {
-        const client = await pool.connect();
-        const rows = await client.queryObject<{id: number, name: string, maintenance: string, size: string, imageurl: string }>(
-          `SELECT p.*
-          FROM obsidian_demo_schema.plants AS p
-          INNER JOIN obsidian_demo_schema.plants_countries AS pc
-          ON p.id = pc.plant_id
-          INNER JOIN obsidian_demo_schema.countries AS c
-          ON c.id = pc.country_id
-          WHERE c.id = $1`
-        )
-        client.release();
-        return rows.rows;
-      }
-      catch (err) {
-        console.log(err);
-        console.log('resetting connection');
-        pool.end();
-        pool = new Pool(config, POOL_CONNECTIONS);
-      }
-    }
-  },
+  // Plant: {
+  //   country: async (_a: string, { id }: { id: string | number}) => {
+  //     try{
+  //       const client = await pool.connect()
+  //       const rows = await client.queryObject<{id: number, name:string, climate: string}>({
+  //         text: `SELECT c.* 
+  //         FROM obsidian_demo_schema.countries AS c
+  //         INNER JOIN obsidian_demo_schema.plants_countries AS pc
+  //         ON c.id = pc.plant_id
+  //         INNER JOIN obsidian_demo_schema.plants as p
+  //         ON p.id = pc.country_id
+  //         WHERE c.id = $1`,
+  //         args: [id]
+  //       })
+  //       client.release()
+  //       return rows.rows;
+  //     }catch (err) {
+  //       console.log(err);
+  //       console.log('resetting connection');
+  //       pool.end();
+  //       pool = new Pool(config, POOL_CONNECTIONS);
+  //     }
+  //   }
+  // },
+  // Country: {
+  //   plant: async (_a: string, { input }: { input: string | number }) => {
+  //     try {
+  //       const client = await pool.connect();
+  //       const rows = await client.queryObject<{id: number, name: string, maintenance: string, size: string, imageurl: string }>(
+  //         `SELECT p.*
+  //         FROM obsidian_demo_schema.plants AS p
+  //         INNER JOIN obsidian_demo_schema.plants_countries AS pc
+  //         ON p.id = pc.plant_id
+  //         INNER JOIN obsidian_demo_schema.countries AS c
+  //         ON c.id = pc.country_id
+  //         WHERE c.id = $1`
+  //       )
+  //       client.release();
+  //       return rows.rows;
+  //     }
+  //     catch (err) {
+  //       console.log(err);
+  //       console.log('resetting connection');
+  //       pool.end();
+  //       pool = new Pool(config, POOL_CONNECTIONS);
+  //     }
+  //   }
+  // },
   Mutation: {
     addPlant: async(_a: string, { input }: { input: {name: string, maintenance:string, size:string, imageurl: string}}) => {
       try{
@@ -170,7 +171,7 @@ const resolvers = {
             input.imageurl],
         }
         );
-        client.release();
+        await client.release();
         return rows.rows[0]
       }
       catch (err) {
@@ -200,7 +201,7 @@ const resolvers = {
           args: [id],
         });
 
-        client.release();
+        await client.release();
 
         const deletedPlant = rows[0];
 

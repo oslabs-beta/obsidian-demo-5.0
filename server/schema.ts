@@ -21,7 +21,6 @@ const types = gql`
   }
   type Plant {
     id: ID!
-    country: Country
     name: String!
     maintenance: String!
     size: String!
@@ -29,7 +28,6 @@ const types = gql`
   }
   type Country {
     id: ID
-		plant: Plant
     name: String
     climate: String
   }
