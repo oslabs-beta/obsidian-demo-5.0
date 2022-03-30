@@ -1,2 +1,16 @@
 # obsidian-demo-5.0
-deno run --allow-net --allow-read --unstable --reload server.tsx --config tsconfig.json 
+
+Clone this repository
+
+Install the latest version of Deno. For more information on how to install Deno, please refer to the Deno documentation https://deno.land/manual/getting_started/installation.
+
+Script to start Server:
+
+deno run --allow-env --allow-net --allow-read --unstable server.tsx -c tsconfig.json
+
+
+Connecting Demo with Obsidian Devtool:
+Clone the Obsidian repository and ensure that the Obsidian folder is located within the same parent directory as the Obsidian Demo.
+ (If you have not yet updated Obsidian with your unique ChromeID or have questions about installing Obsidian, see instructions on how to do this here. https://github.com/oslabs-beta/obsidian-developer-tool )
+
+
