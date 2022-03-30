@@ -7,7 +7,7 @@ Install the latest version of Deno. For more information on how to install Deno,
 Scripts to start server:
 ```
 deno install -qAf --unstable https://deno.land/x/denon/denon.ts
-export PATH="/[Users]/[User]/.deno/bin:$PATH"
+export PATH="/Users/[User]/.deno/bin:$PATH"
 denon start
 ```
 
