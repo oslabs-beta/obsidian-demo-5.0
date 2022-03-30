@@ -33,6 +33,12 @@ export const Section = (props: any) => {
   const [size, setSize] = (React as any).useState("");
   const [imageurl, setImageurl] = (React as any).useState("");
 
+	// CLEAR CACHE
+	function onClick(e: any) {
+    clearCache();
+    setTimeout(() => setCache(new BrowserCache(cache.storage)), 1);
+  }
+
 	// GQL QUERIES
   const allPlantsQuery = `query {
     plants {
@@ -94,13 +100,17 @@ export const Section = (props: any) => {
 
 	// MUTATION HANDLE CLICKS
   const addPlant = async (e: any) => {
-    e.preventDefault();
+    // e.preventDefault();
     console.log(addPlantQuery)
     const res = await mutate(addPlantQuery);
     // get the new plant
     const newPlant = res.data.addPlant;
     // copy the old plants and add the new one
     await setPlants([...plants, newPlant]);
+		await setName('');
+		await setMaintenance('');
+		await setSize('');
+		await setImageurl('');
   };
 
 	const deletePlant = async (id:any) => {
@@ -129,6 +139,14 @@ export const Section = (props: any) => {
       		<button className="btn btn-outline-primary" onClick={getLargePlants}>Large Plants</button>
         </div>
         <Plants plants={plants} deletePlant = {deletePlant} />
+				<button
+              type="button"
+              className="content-center d-none px-4 py-2 border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-800 hover:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              onClick={onClick}
+							id="clearCacheButton"
+            >
+              Clear Cache
+            </button>
     </div>
   );
 };

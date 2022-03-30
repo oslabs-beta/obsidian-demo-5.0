@@ -7,7 +7,7 @@ const cacheContext = React.createContext();
 function ObsidianWrapper(props) {
 	const [cache, setCache] = React.useState(new BrowserCache());
 	
-	// const chromeExtensionId = 'mjlkdebdclaakhcdbaapleegkoehnboj';
+	const chromeExtensionId = 'mjlkdebdclaakhcdbaapleegkoehnboj';
 	
 	// window.localStorage.setItem('cache', JSON.stringify(cache));
 
@@ -19,8 +19,9 @@ function ObsidianWrapper(props) {
 	// console.log('Here\'s the test response from localStorage: ', testResponse)
 	async function query(query, options = {}) {
 		// dev tool messages
+		// const cachePort = chrome.runtime.connect(chromeExtensionId, {name: "cache"});
 		const startTime = Date.now();
-		// chrome.runtime.sendMessage(chromeExtensionId, {'query': query});
+		chrome.runtime.sendMessage(chromeExtensionId, {'query': query});
 		// chrome.runtime.sendMessage(chromeExtensionId, {'cache': window.localStorage.getItem('cache')})
 		// console.log('Here\'s the message content: ', window.localStorage.getItem('cache'))
 		// set the options object default properties if not provided
@@ -55,7 +56,7 @@ function ObsidianWrapper(props) {
 			if (resObj) {
 				// returning cached response as a promise
 				const cacheHitResponseTime = Date.now() - startTime;
-				// chrome.runtime.sendMessage('mjlkdebdclaakhcdbaapleegkoehnboj', {'cacheHitResponseTime': cacheHitResponseTime});
+				chrome.runtime.sendMessage(chromeExtensionId, {'cacheHitResponseTime': cacheHitResponseTime});
 				return new Promise((resolve, reject) => resolve(resObj));
 			}
 			// execute graphql fetch request if cache miss
@@ -84,11 +85,13 @@ function ObsidianWrapper(props) {
 				// update result in cache if cacheWrite is set to true
 				if (cacheWrite) {
 					if (wholeQuery) cache.writeWholeQuery(query, deepResObj);
-					else cache.write(query, deepResObj);
+					else await cache.write(query, deepResObj);
 				}
 				const cacheMissResponseTime = Date.now() - startTime;
-				// chrome.runtime.sendMessage('mjlkdebdclaakhcdbaapleegkoehnboj', {'cacheMissResponseTime': cacheMissResponseTime});
+				chrome.runtime.sendMessage(chromeExtensionId, {'cacheMissResponseTime': cacheMissResponseTime});
 				// console.log('Here\'s the response time on the front end: ', cacheMissResponseTime);
+				chrome.runtime.sendMessage(chromeExtensionId, {cache: JSON.stringify(cache)})
+				// cachePort.postMessage(chromeExtensionId, {cache: JSON.stringify(cache)});
 				return resObj;
 			} catch (e) {
 				console.log(e);
@@ -100,62 +103,11 @@ function ObsidianWrapper(props) {
 	function clearCache() {
 		cache.cacheClear();
 	}
-	// mutate method, refer to mutate.js for more info
-	// async function mutateOld(mutation, options = {}) {
-	//   // set the options object default properties if not provided
-	//   mutation = insertTypenames(mutation);
-	//   let {
-	//     endpoint = '/graphql',
-	//     cacheWrite = true,
-	//     toDelete = false,
-	//     update = null,
-	//     writeThrough = true,
-	//   } = options;
-	//   // for any mutation a request to the server is made
-	//   try {
-	//     // one-time check to add types to cache
-	//     if(writeThrough){
-	//       writeThrough = await cache.write(mutation, {}, toDelete, writeThrough);
-	//     }
-	//     const responseObj = await fetch(endpoint, {
-	//       method: 'POST',
-	//       headers: {
-	//         'Content-Type': 'application/json',
-	//         Accept: 'application/json',
-	//       },
-	//       body: JSON.stringify({ query: mutation }),
-	//     }).then((resp) => resp.json());
-	//     if (!cacheWrite) return responseObj;
-	//     // first behaviour when delete cache is set to true
-	//     console.log('writeThrough before toDelete: ', writeThrough)
-	//     if (!writeThrough && toDelete) {
-	//       console.log('in the toDelete')
-	//       cache.write(mutation, responseObj, true);
-	//       return responseObj;
-	//     }
-	//     // second behaviour if update function provided
-	//     if (update) {
-	//       update(cache, responseObj);
-	//     }
-	//     // third behaviour just for normal update (no-delete, no update function)
-	//     if(!writeThrough){
-	//       console.log('in the !writeThrough')
-	//       cache.write(mutation, responseObj);
-	//     }
-	//     if (writeThrough) {
-	//       console.log('Here\'s the response from cache: ', writeThrough);
-	//       return writeThrough;
-	//     }
-	//     return responseObj;
-	//   } catch (e) {
-	//     console.log(e);
-	//   }
-	// }
 
 	// breaking out writethrough logic vs. non-writethrough logic
 	async function mutate(mutation, options = {}) {
 		// dev tool messages
-		// chrome.runtime.sendMessage('mjlkdebdclaakhcdbaapleegkoehnboj', {'mutation': mutation});
+		chrome.runtime.sendMessage(chromeExtensionId, {'mutation': mutation});
 		const startTime = Date.now();
 		mutation = insertTypenames(mutation);
 		const {
@@ -171,7 +123,7 @@ function ObsidianWrapper(props) {
 				if (toDelete) {
 					const responseObj = await cache.writeThrough(mutation, {}, true, endpoint);
 					const deleteMutationResponseTime = Date.now() - startTime;
-					// chrome.runtime.sendMessage('mjlkdebdclaakhcdbaapleegkoehnboj', {'deleteMutationResponseTime': deleteMutationResponseTime});
+					chrome.runtime.sendMessage(chromeExtensionId, {'deleteMutationResponseTime': deleteMutationResponseTime});
 					return responseObj;
 				} else {
 					// for add mutation
@@ -184,7 +136,7 @@ function ObsidianWrapper(props) {
 					// always write/over-write to cache (add/update)
 					// GQL call to make changes and synchronize database
 					const addOrUpdateMutationResponseTime = Date.now() - startTime;
-					// chrome.runtime.sendMessage('mjlkdebdclaakhcdbaapleegkoehnboj', {'addOrUpdateMutationResponseTime': addOrUpdateMutationResponseTime});
+					chrome.runtime.sendMessage(chromeExtensionId, {'addOrUpdateMutationResponseTime': addOrUpdateMutationResponseTime});
 					return responseObj;
 				}
 			} else {
