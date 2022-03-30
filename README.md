@@ -4,7 +4,7 @@ Clone this repository
 
 Install the latest version of Deno. For more information on how to install Deno, please refer to the Deno documentation https://deno.land/manual/getting_started/installation.
 
-Script to start Server:
+Scripts to start server:
 ```
 deno install -qAf --unstable https://deno.land/x/denon/denon.ts
 export PATH="/[Users]/[User]/.deno/bin:$PATH"
