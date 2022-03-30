@@ -1,4 +1,4 @@
-# obsidian-demo-5.0
+# Obsidian-Demo-5.0
 
 Clone this repository
 
