@@ -28,12 +28,12 @@ declare global {
 
 const Main = (props : any) => {
 
-  return (<>
+  return (<div className='bg-dark'>
 		<Nav />
 		<Header />
 		<Section />
 		<Footer />
-  </>)
+  </div>)
 };
 
 export default Main;

@@ -10,18 +10,18 @@ function ObsidianWrapper(props) {
 	const chromeExtensionId = 'mjlkdebdclaakhcdbaapleegkoehnboj';
 	
 	// window.localStorage.setItem('cache', JSON.stringify(cache));
-
-	// for (const field in cache.storage) {
-	// 	window.localStorage.setItem(field, JSON.stringify(cache.storage[field]));
-	// }
+	
 	// window.localStorage.setItem('yasir','anthony');
 	// const testResponse = window.localStorage.getItem('yasir');
 	// console.log('Here\'s the test response from localStorage: ', testResponse)
 	async function query(query, options = {}) {
+		// const queryPort = chrome.runtime.connect(chromeExtensionId, {name: "query"});
+		// const performanceTimesPort = chrome.runtime.connect(chromeExtensionId, {name: "performanceTimes"});
 		// dev tool messages
 		// const cachePort = chrome.runtime.connect(chromeExtensionId, {name: "cache"});
 		const startTime = Date.now();
 		chrome.runtime.sendMessage(chromeExtensionId, {'query': query});
+		// queryPort.postMessage({'query': query});
 		// chrome.runtime.sendMessage(chromeExtensionId, {'cache': window.localStorage.getItem('cache')})
 		// console.log('Here\'s the message content: ', window.localStorage.getItem('cache'))
 		// set the options object default properties if not provided
@@ -57,6 +57,7 @@ function ObsidianWrapper(props) {
 				// returning cached response as a promise
 				const cacheHitResponseTime = Date.now() - startTime;
 				chrome.runtime.sendMessage(chromeExtensionId, {'cacheHitResponseTime': cacheHitResponseTime});
+				// performanceTimesPort.postMessage({'cacheHitResponseTime': cacheHitResponseTime});
 				return new Promise((resolve, reject) => resolve(resObj));
 			}
 			// execute graphql fetch request if cache miss
@@ -89,9 +90,9 @@ function ObsidianWrapper(props) {
 				}
 				const cacheMissResponseTime = Date.now() - startTime;
 				chrome.runtime.sendMessage(chromeExtensionId, {'cacheMissResponseTime': cacheMissResponseTime});
+				// performanceTimesPort.postMessage({'cacheMissResponseTime': cacheMissResponseTime});
 				// console.log('Here\'s the response time on the front end: ', cacheMissResponseTime);
 				chrome.runtime.sendMessage(chromeExtensionId, {cache: JSON.stringify(cache)})
-				// cachePort.postMessage(chromeExtensionId, {cache: JSON.stringify(cache)});
 				return resObj;
 			} catch (e) {
 				console.log(e);
@@ -108,6 +109,7 @@ function ObsidianWrapper(props) {
 	async function mutate(mutation, options = {}) {
 		// dev tool messages
 		chrome.runtime.sendMessage(chromeExtensionId, {'mutation': mutation});
+		// performanceTimesPort.postMessage({'mutation': mutation});
 		const startTime = Date.now();
 		mutation = insertTypenames(mutation);
 		const {
@@ -124,6 +126,7 @@ function ObsidianWrapper(props) {
 					const responseObj = await cache.writeThrough(mutation, {}, true, endpoint);
 					const deleteMutationResponseTime = Date.now() - startTime;
 					chrome.runtime.sendMessage(chromeExtensionId, {'deleteMutationResponseTime': deleteMutationResponseTime});
+					// performanceTimesPort.postMessage({'deleteMutationResponseTime': deleteMutationResponseTime});
 					return responseObj;
 				} else {
 					// for add mutation
@@ -137,6 +140,7 @@ function ObsidianWrapper(props) {
 					// GQL call to make changes and synchronize database
 					const addOrUpdateMutationResponseTime = Date.now() - startTime;
 					chrome.runtime.sendMessage(chromeExtensionId, {'addOrUpdateMutationResponseTime': addOrUpdateMutationResponseTime});
+					// performanceTimesPort.postMessage({'addOrUpdateMutationResponseTime': addOrUpdateMutationResponseTime});
 					return responseObj;
 				}
 			} else {
