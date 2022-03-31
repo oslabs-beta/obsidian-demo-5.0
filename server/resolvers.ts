@@ -14,6 +14,7 @@ const config = {
   database: Deno.env.get('PG_DATABASE'),
   password: Deno.env.get('PG_PASSWORD'),
   hostname: Deno.env.get('PG_HOSTNAME'),
+	host_type: "tcp",
   port: pgPort,
 };
 
