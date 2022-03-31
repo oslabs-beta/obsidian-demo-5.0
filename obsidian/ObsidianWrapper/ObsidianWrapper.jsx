@@ -125,6 +125,7 @@ function ObsidianWrapper(props) {
 				if (toDelete) {
 					const responseObj = await cache.writeThrough(mutation, {}, true, endpoint);
 					const deleteMutationResponseTime = Date.now() - startTime;
+					// console.log('Here\'s the delete time: ', deleteMutationResponseTime)
 					chrome.runtime.sendMessage(chromeExtensionId, {'deleteMutationResponseTime': deleteMutationResponseTime});
 					// performanceTimesPort.postMessage({'deleteMutationResponseTime': deleteMutationResponseTime});
 					return responseObj;
@@ -136,8 +137,6 @@ function ObsidianWrapper(props) {
 						// run the update function
 						update(cache, responseObj)
 					}
-					// always write/over-write to cache (add/update)
-					// GQL call to make changes and synchronize database
 					const addOrUpdateMutationResponseTime = Date.now() - startTime;
 					chrome.runtime.sendMessage(chromeExtensionId, {'addOrUpdateMutationResponseTime': addOrUpdateMutationResponseTime});
 					// performanceTimesPort.postMessage({'addOrUpdateMutationResponseTime': addOrUpdateMutationResponseTime});
@@ -159,6 +158,9 @@ function ObsidianWrapper(props) {
 				// first behaviour when delete cache is set to true
 				if (toDelete) {
 					cache.write(mutation, responseObj, true);
+					const deleteMutationResponseTime = Date.now() - startTime;
+					console.log('Here\'s the delete time: ', deleteMutationResponseTime)
+					chrome.runtime.sendMessage(chromeExtensionId, {'deleteMutationResponseTime': deleteMutationResponseTime});
 					return responseObj;
 				}
 				// second behaviour if update function provided
@@ -167,6 +169,8 @@ function ObsidianWrapper(props) {
 				}
 				// third behaviour just for normal update (no-delete, no update function)
 				cache.write(mutation, responseObj);
+				const addOrUpdateMutationResponseTime = Date.now() - startTime;
+				chrome.runtime.sendMessage(chromeExtensionId, {'addOrUpdateMutationResponseTime': addOrUpdateMutationResponseTime});
 				return responseObj;
 			}
 		} catch (e) {

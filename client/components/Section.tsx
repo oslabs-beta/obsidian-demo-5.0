@@ -3,6 +3,7 @@ import Plant from "./Plants/Plant.tsx";
 import Plants from "./Plants/Plants.tsx";
 import {useObsidian} from '../../deps.ts';
 import AddPlant from './AddPlant.tsx';
+import BrowserCache from '../../obsidian/src/Browser/CacheClassBrowser.js'
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -100,8 +101,8 @@ export const Section = (props: any) => {
 
 	// MUTATION HANDLE CLICKS
   const addPlant = async (e: any) => {
-    // e.preventDefault();
-    console.log(addPlantQuery)
+    e.preventDefault();
+    // console.log(addPlantQuery)
     const res = await mutate(addPlantQuery);
     // get the new plant
     const newPlant = res.data.addPlant;
@@ -128,8 +129,11 @@ export const Section = (props: any) => {
 		}))
 	}
 
+	// CLEAR CACHE
+
+
   return (
-		<div className='bg-dark text-light m-0'>
+		<div className='bg-dark text-light m-0 h-100'>
         <AddPlant addPlant={addPlant} name={name} setName={setName} maintenance={maintenance} setMaintenance={setMaintenance} size={size} setSize={setSize} imageurl={imageurl} setImageurl={setImageurl} />
         <div className="text-center my-2">
       		<button className="btn btn-outline-primary" onClick={getAllPlants}>All Plants</button>
@@ -140,7 +144,7 @@ export const Section = (props: any) => {
 				<button
               type="button"
               className="content-center d-none px-4 py-2 border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-800 hover:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              onClick={onClick}
+              onClick={clearCache}
 							id="clearCacheButton"
             >
               Clear Cache

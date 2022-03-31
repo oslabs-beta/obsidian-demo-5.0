@@ -91,8 +91,8 @@ export default class BrowserCache {
 				}
 				// same logic for both situations
 				// normalize the result, invalidate the cache and return the appropriate object
-				console.log('Before write query :', queryStr)
-				console.log('Before write respObh :', respObj)
+				console.log('Before write query :', queryStr);
+				console.log('Before write respObh :', respObj);
 				await this.write(queryStr, respObj, deleteFlag);
 				return respObj;
 			}
@@ -102,8 +102,8 @@ export default class BrowserCache {
 	}
 
 	async write(queryStr, respObj, deleteFlag) {
-		console.log('In write query :', queryStr)
-		console.log('In write respObj :', respObj)
+		console.log('In write query :', queryStr);
+		console.log('In write respObj :', respObj);
 		const queryObj = destructureQueries(queryStr);
 		const resFromNormalize = normalizeResult(queryObj, respObj, deleteFlag);
 		// update the original cache with same reference

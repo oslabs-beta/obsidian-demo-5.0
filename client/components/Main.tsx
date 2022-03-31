@@ -28,7 +28,7 @@ declare global {
 
 const Main = (props : any) => {
 
-  return (<div className='bg-dark'>
+  return (<div className='container-fluid bg-dark min-vh-100'>
 		<Nav />
 		<Header />
 		<Section />
