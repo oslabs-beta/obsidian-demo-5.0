@@ -34,12 +34,6 @@ export const Section = (props: any) => {
   const [size, setSize] = (React as any).useState("");
   const [imageurl, setImageurl] = (React as any).useState("");
 
-	// CLEAR CACHE
-	function onClick(e: any) {
-    clearCache();
-    setTimeout(() => setCache(new BrowserCache(cache.storage)), 1);
-  }
-
 	// GQL QUERIES
   const allPlantsQuery = `query {
     plants {
@@ -130,7 +124,10 @@ export const Section = (props: any) => {
 	}
 
 	// CLEAR CACHE
-
+	function handleClearCache() {
+    clearCache();
+    setTimeout(() => setCache(new BrowserCache(cache.storage)), 1);
+  }
 
   return (
 		<div className='bg-dark text-light m-0 h-100'>
@@ -144,7 +141,7 @@ export const Section = (props: any) => {
 				<button
               type="button"
               className="content-center d-none px-4 py-2 border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-800 hover:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-              onClick={clearCache}
+              onClick={() => handleClearCache()}
 							id="clearCacheButton"
             >
               Clear Cache
