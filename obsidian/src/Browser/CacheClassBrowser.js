@@ -91,8 +91,6 @@ export default class BrowserCache {
 				}
 				// same logic for both situations
 				// normalize the result, invalidate the cache and return the appropriate object
-				console.log('Before write query :', queryStr)
-				console.log('Before write respObh :', respObj)
 				await this.write(queryStr, respObj, deleteFlag);
 				return respObj;
 			}
@@ -102,8 +100,6 @@ export default class BrowserCache {
 	}
 
 	async write(queryStr, respObj, deleteFlag) {
-		console.log('In write query :', queryStr)
-		console.log('In write respObj :', respObj)
 		const queryObj = destructureQueries(queryStr);
 		const resFromNormalize = normalizeResult(queryObj, respObj, deleteFlag);
 		// update the original cache with same reference
@@ -142,10 +138,6 @@ export default class BrowserCache {
 			return respObj;
 		}
 		// increment ID for ADD mutations only
-		console.log(
-			'Line 141, F constructResponseObject,  id:',
-			this.storage.writeThroughInfo[mutationName]
-		);
 		obj.id = (++this.storage.writeThroughInfo[mutationName].lastId).toString();
 
 		// ADD mutation logic

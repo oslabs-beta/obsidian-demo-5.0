@@ -4,7 +4,7 @@
     "start": {
       "cmd": "deno run --allow-net --allow-read --allow-env --unstable --no-check server.tsx",
       "desc": "run my app.ts file",
-			"watch": true
+      "watch": true
     }
   }
 }

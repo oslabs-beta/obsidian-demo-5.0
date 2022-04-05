@@ -1,19 +1,20 @@
+// import { useObsidian } from 'https://deno.land/x/obsidian@v3.2.0/ObsidianWrapper/ObsidianWrapper.jsx';
 import React from 'https://dev.jspm.io/react';
 import ReactDOMServer from 'https://dev.jspm.io/react-dom/server';
 import ReactDOM from 'https://dev.jspm.io/react-dom';
-import { Pool } from 'https://deno.land/x/postgres/mod.ts';
 import {
   ObsidianWrapper,
   useObsidian,
 } from './obsidian/ObsidianWrapper/ObsidianWrapper.jsx';
 import BrowserCache from './obsidian/src/Browser/CacheClassBrowser.js';
 
-declare global {
-    namespace JSX {
-        interface IntrinsicElements {
-            [k: string]: any;
-        }
-    }
-}
+// import { ObsidianWrapper, useObsidian, BrowserCache } from 'https://deno.land/x/obsidian@v.4.0.0/clientMod.ts';
 
-export {React, ReactDOMServer, ReactDOM, Pool, ObsidianWrapper, useObsidian, BrowserCache};
+// import {
+//   ObsidianWrapper,
+//   useObsidian
+// } from '../obsidian/ObsidianWrapper/ObsidianWrapper.jsx';
+
+// import BrowserCache from '../obsidian/src/Browser/CacheClassBrowser.js';
+
+export { React, ReactDOMServer, ReactDOM ,ObsidianWrapper, useObsidian, BrowserCache};
