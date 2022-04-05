@@ -17,6 +17,7 @@ declare global {
 			img: any;
       input: any;
 			footer: any;
+			b: any;
     }
   }
 }

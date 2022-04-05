@@ -4,9 +4,8 @@ import ReactDOMServer from 'https://dev.jspm.io/react-dom/server';
 import ReactDOM from 'https://dev.jspm.io/react-dom';
 import {
   ObsidianWrapper,
-  useObsidian
+  useObsidian,
 } from './obsidian/ObsidianWrapper/ObsidianWrapper.jsx';
-
 import BrowserCache from './obsidian/src/Browser/CacheClassBrowser.js';
 
 // import { ObsidianWrapper, useObsidian, BrowserCache } from 'https://deno.land/x/obsidian@v.4.0.0/clientMod.ts';

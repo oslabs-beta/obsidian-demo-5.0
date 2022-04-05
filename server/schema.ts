@@ -48,10 +48,12 @@ const types = gql`
     name: String!
     climate: String!
   }
+
   type Query {
     plants(input: PlantInput): [Plant]!
     countries(input: CountryInput): [Country]!
   }
+
   type Mutation {
     addPlant(input: AddPlant!): Plant
     deletePlant(id: ID!): Plant!
