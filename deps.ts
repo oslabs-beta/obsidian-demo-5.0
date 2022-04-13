@@ -1,5 +1,20 @@
-import React from 'https://jspm.dev/react@17.0.2';
-import ReactDOMServer from 'https://jspm.dev/react-dom@17.0.2/server';
-import ReactDom from 'https://jspm.dev/react-dom@17.0.2';
+// import { useObsidian } from 'https://deno.land/x/obsidian@v3.2.0/ObsidianWrapper/ObsidianWrapper.jsx';
+import React from 'https://dev.jspm.io/react';
+import ReactDOMServer from 'https://dev.jspm.io/react-dom/server';
+import ReactDOM from 'https://dev.jspm.io/react-dom';
+import {
+  ObsidianWrapper,
+  useObsidian,
+} from './obsidian/ObsidianWrapper/ObsidianWrapper.jsx';
+import BrowserCache from './obsidian/src/Browser/CacheClassBrowser.js';
 
-export {React, ReactDOMServer, ReactDom};
+// import { ObsidianWrapper, useObsidian, BrowserCache } from 'https://deno.land/x/obsidian@v.4.0.0/clientMod.ts';
+
+// import {
+//   ObsidianWrapper,
+//   useObsidian
+// } from '../obsidian/ObsidianWrapper/ObsidianWrapper.jsx';
+
+// import BrowserCache from '../obsidian/src/Browser/CacheClassBrowser.js';
+
+export { React, ReactDOMServer, ReactDOM ,ObsidianWrapper, useObsidian, BrowserCache};
