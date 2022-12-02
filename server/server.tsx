@@ -3,6 +3,7 @@ import {App} from '../client/app.tsx';
 import {types} from './schema.ts';
 import { resolvers } from './resolvers.ts';
 import { routes } from './routes.ts';
+import { emit } from "https://deno.land/x/emit/mod.ts";
 
 const app = new Application();
 
@@ -11,7 +12,7 @@ const router = new Router();
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-const { files } = await Deno.emit(
+const { files } = await emit(
   "../client/client.tsx",
   {
       check: false,

@@ -10,20 +10,28 @@ import types from './server/schema.ts';
 import { createDb } from './server/db/db.ts';
 import { oakCors } from "https://deno.land/x/cors/mod.ts";
 
+import { emit } from "https://deno.land/x/emit/mod.ts";
+import { bundle } from "https://deno.land/x/emit/mod.ts";
+
 const app = new Application();
 const port: number = 3000;
 
 // specify route to create bundle
 const jsBundlePath = '/main.js'
 
-const { files, diagnostics } = await Deno.emit('./server/client.tsx', {
-	check: false,
-  bundle: "module",
-  // compilerOptions: { lib: ["dom", "dom.iterable", "esnext"] },
-})
+// const { files, diagnostics } = await Deno.emit('./server/client.tsx', {
+// 	check: false,
+//   bundle: "module",
+//   // compilerOptions: { lib: ["dom", "dom.iterable", "esnext"] },
+// })
+const result = await bundle('./server/client.tsx');
+const { code } = result;
+// console.log(code); 
+
 createDb();
 
-console.log('Here\'s the diagnostics file: ', diagnostics);
+// console.log('Here\'s the diagnostics file: ', diagnostics);
+// console.log('Here\'s the diagnostics file: ', diagnostics);
 
 const router = new Router();
 
@@ -49,7 +57,7 @@ router.get("/", (context: any) => {
 })
 .get(jsBundlePath, (context: any) => {
 	context.response.type = 'application/javascript';
-	context.response.body = files["deno:///bundle.js"];
+	context.response.body = code;
 })
 
 app.addEventListener("error", (event: any) => {
