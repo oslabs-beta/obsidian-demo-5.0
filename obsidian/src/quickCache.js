@@ -1,16 +1,16 @@
 /** @format */
 
-import "https://deno.land/x/dotenv/load.ts";
-import { connect } from "https://deno.land/x/redis/mod.ts";
-import { gql } from "https://deno.land/x/oak_graphql/mod.ts";
-import { print, visit } from "https://deno.land/x/graphql_deno/mod.ts";
+import 'https://deno.land/x/dotenv/load.ts';
+import { connect } from 'https://deno.land/x/redis/mod.ts';
+import { gql } from 'https://deno.land/x/oak_graphql/mod.ts';
+import { print, visit } from 'https://deno.land/x/graphql_deno/mod.ts';
 
 let redis;
-const context = window.Deno ? "server" : "client";
+const context = window.Deno ? 'server' : 'client';
 
-if (context === "server") {
+if (context === 'server') {
   redis = await connect({
-    hostname: Deno.env.get("REDIS_HOST"),
+    hostname: Deno.env.get('REDIS_HOST'),
     port: 6379,
   });
 }
@@ -25,7 +25,7 @@ export class Cache {
     }
   ) {
     this.storage = initialCache;
-    this.context = window.Deno ? "server" : "client";
+    this.context = window.Deno ? 'server' : 'client';
   }
 
   // set cache configurations
@@ -39,7 +39,7 @@ export class Cache {
     //the queryStr it gets is the JSON stringified
     const returnedValue = await this.cacheRead(queryStr);
 
-    if (("returnedValue", returnedValue)) {
+    if (('returnedValue', returnedValue)) {
       return JSON.parse(returnedValue);
     } else {
       return undefined;
@@ -108,22 +108,22 @@ export class Cache {
   }
 
   async cacheRead(hash) {
-    if (this.context === "client") {
+    if (this.context === 'client') {
       return this.storage[hash];
     } else {
-      if (hash === "ROOT_QUERY" || hash === "ROOT_MUTATION") {
-        const hasRootQuery = await redis.get("ROOT_QUERY");
+      if (hash === 'ROOT_QUERY' || hash === 'ROOT_MUTATION') {
+        const hasRootQuery = await redis.get('ROOT_QUERY');
 
         if (!hasRootQuery) {
-          await redis.set("ROOT_QUERY", JSON.stringify({}));
+          await redis.set('ROOT_QUERY', JSON.stringify({}));
         }
-        const hasRootMutation = await redis.get("ROOT_MUTATION");
+        const hasRootMutation = await redis.get('ROOT_MUTATION');
 
         if (!hasRootMutation) {
-          await redis.set("ROOT_MUTATION", JSON.stringify({}));
+          await redis.set('ROOT_MUTATION', JSON.stringify({}));
         }
       }
-      let hashedQuery = await redis.get(hash);
+      let hashedQuery = await redis.hget('ROOT_QUERY', hash);
 
       if (hashedQuery === undefined) return undefined;
       return JSON.parse(hashedQuery);
@@ -131,12 +131,12 @@ export class Cache {
   }
   async cacheWrite(hash, value) {
     // writes value to object cache or JSON.stringified value to redis cache
-    if (this.context === "client") {
+    if (this.context === 'client') {
       this.storage[hash] = value;
     } else {
       value = JSON.stringify(value);
-      await redis.setex(hash, 6000, value);
-      let hashedQuery = await redis.get(hash);
+      await redis.hset('ROOT_QUERY', hash, value);
+      let hashedQuery = await redis.hget('ROOT_QUERY', hash);
     }
   }
 
@@ -151,21 +151,21 @@ export class Cache {
 
   async cacheDelete(hash) {
     // deletes the hash/value pair on either object cache or redis cache
-    if (this.context === "client") {
+    if (this.context === 'client') {
       delete this.storage[hash];
     } else await redis.del(hash);
   }
   async cacheClear() {
     // erases either object cache or redis cache
-    if (this.context === "client") {
+    if (this.context === 'client') {
       this.storage = { ROOT_QUERY: {}, ROOT_MUTATION: {} };
     } else {
       await redis.flushdb((err, successful) => {
-        if (err) console.log("redis error", err);
-        console.log(successful, "clear");
+        if (err) console.log('redis error', err);
+        console.log(successful, 'clear');
       });
-      await redis.set("ROOT_QUERY", JSON.stringify({}));
-      await redis.set("ROOT_MUTATION", JSON.stringify({}));
+      await redis.hset('ROOT_QUERY', 'blank', JSON.stringify({}));
+      await redis.set('ROOT_MUTATION', 'blank', JSON.stringify({}));
     }
   }
 
