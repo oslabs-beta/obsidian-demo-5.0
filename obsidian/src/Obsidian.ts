@@ -88,7 +88,6 @@ export async function ObsidianRouter<T>({
       let body = await request.body().value;
       if (maxQueryDepth) queryDepthLimiter(body.query, maxQueryDepth); // If a securty limit is set for maxQueryDepth, invoke queryDepthLimiter, which throws error if query depth exceeds maximum
       body = { query: restructure(body) }; // Restructre gets rid of variables and fragments from the query
-      console.log(`Obsidian.ts, router.post(), line 91: `, body);
       let cacheQueryValue = await cache.read(body.query);
       // Is query in cache?
       if (useCache && useQueryCache && cacheQueryValue) {
@@ -106,7 +105,7 @@ export async function ObsidianRouter<T>({
           console.log(
             '%c Obsidian retrieved data from cache and took ' +
               (t1 - t0) +
-              ' milliseconds',
+              ' milliseconds.',
             'background: #222; color: #00FF00'
           );
         }
@@ -124,14 +123,12 @@ export async function ObsidianRouter<T>({
           gqlResponse,
           customIdentifier
         );
-        // console.log(normalizedGQLResponse);
         if (isMutation(body)) {
           const queryString = await request.body().value;
           invalidateCache(normalizedGQLResponse, queryString.query);
         }
         // If read query: run query, normalize GQL response, transform GQL response, write to cache, and write pieces of normalized GQL response objects
         else {
-          // object: {~plant~1: {name:...}, ~plant~2: {}...}
           const transformedGQLResponse = transformResponse(
             gqlResponse,
             customIdentifier

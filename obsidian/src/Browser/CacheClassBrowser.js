@@ -1,7 +1,7 @@
 /** @format */
 
-import normalizeResult from './normalize.js';
-import destructureQueries from './destructure.js';
+import normalizeResult from "./normalize.js";
+import destructureQueries from "./destructure.js";
 
 export default class BrowserCache {
   constructor(
@@ -10,22 +10,19 @@ export default class BrowserCache {
       ROOT_MUTATION: {},
       // match resolvers to types in order to add them in write-through
       writeThroughInfo: {},
-    }
+    },
   ) {
     this.storage = initialCache;
-    this.context = 'client';
+    this.context = "client";
   }
 
   // Main functionality methods
   async read(queryStr) {
-    console.log(`browser cache read, this.context = ${this.context}`);
-    if (typeof queryStr !== 'string') {
-      throw TypeError('input should be a string');
+    if (typeof queryStr !== "string") {
+      throw TypeError("input should be a string");
     }
-    console.log('query string: ', queryStr);
     // destructure the query string into an object
     const queries = destructureQueries(queryStr).queries;
-    console.log('browser cache read, queries = ', queries);
     // breaks out of function if queryStr is a mutation
     if (!queries) return undefined;
     const responseObject = {};
@@ -33,9 +30,7 @@ export default class BrowserCache {
     for (const query in queries) {
       // get the entire str query from the name input query and arguments
       const queryHash = queries[query].name.concat(queries[query].arguments);
-      const rootQuery = await this.cacheRead('ROOT_QUERY');
-      console.log(`browserCache this.storage: `, this.storage);
-      console.log(`browser cache rootQuery: `, rootQuery);
+      const rootQuery = await this.cacheRead("ROOT_QUERY");
       // match in ROOT_QUERY
       if (rootQuery[queryHash]) {
         // get the hashs to populate from the existent query in the cache
@@ -45,7 +40,7 @@ export default class BrowserCache {
         // invoke populateAllHashes and add data objects to the response object for each input query
         responseObject[respObjProp] = await this.populateAllHashes(
           arrayHashes,
-          queries[query].fields
+          queries[query].fields,
         );
         if (!responseObject[respObjProp]) return undefined;
 
@@ -67,10 +62,10 @@ export default class BrowserCache {
         // if so, make the graphQL call
         if (!this.storage.writeThroughInfo.hasOwnProperty(mutationName)) {
           respObj = await fetch(endpoint, {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
+              "Content-Type": "application/json",
+              Accept: "application/json",
             },
             body: JSON.stringify({ query: queryStr }),
           }).then((resp) => resp.json());
@@ -84,10 +79,10 @@ export default class BrowserCache {
         } else {
           // construct the response object ourselves
           const dummyResponse = await fetch(endpoint, {
-            method: 'POST',
+            method: "POST",
             headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
+              "Content-Type": "application/json",
+              Accept: "application/json",
             },
             body: JSON.stringify({ query: queryStr }),
           }).then((resp) => resp.json());
@@ -109,8 +104,8 @@ export default class BrowserCache {
     // update the original cache with same reference
     for (const hash in resFromNormalize) {
       const resp = await this.cacheRead(hash);
-      if (resFromNormalize[hash] === 'DELETED') {
-        await this.cacheWrite(hash, 'DELETED');
+      if (resFromNormalize[hash] === "DELETED") {
+        await this.cacheWrite(hash, "DELETED");
       } else if (resp) {
         const newObj = Object.assign(resp, resFromNormalize[hash]);
         await this.cacheWrite(hash, newObj);
@@ -133,7 +128,7 @@ export default class BrowserCache {
     if (deleteFlag) {
       // add id and value from the queryObj
       let idAndVal = mutationData.arguments;
-      idAndVal = idAndVal.split(':');
+      idAndVal = idAndVal.split(":");
       const id = idAndVal[0].substring(1);
       const val = idAndVal[1].substring(0, idAndVal[1].length - 1);
       obj[id] = val;
@@ -152,17 +147,17 @@ export default class BrowserCache {
   }
 
   separateArguments(str, respObj, mutationName) {
-    const startIndex = str.indexOf('{');
+    const startIndex = str.indexOf("{");
     const slicedStr = str.slice(startIndex + 1, str.length - 2);
-    const argumentPairs = slicedStr.split(',');
+    const argumentPairs = slicedStr.split(",");
     for (const argumentPair of argumentPairs) {
-      const argumentKeyAndValue = argumentPair.split(':');
+      const argumentKeyAndValue = argumentPair.split(":");
       const argumentKey = argumentKeyAndValue[0];
       let argumentValue = Number(argumentKeyAndValue[1])
         ? Number(argumentKeyAndValue[1])
         : argumentKeyAndValue[1];
-      if (typeof argumentValue === 'string') {
-        argumentValue = argumentValue.replace(/\"/g, '');
+      if (typeof argumentValue === "string") {
+        argumentValue = argumentValue.replace(/\"/g, "");
       }
       respObj.data[mutationName][argumentKey] = argumentValue;
     }
@@ -171,8 +166,8 @@ export default class BrowserCache {
   addNonScalarFields(respObj, mutationData) {
     for (const field in mutationData.fields) {
       if (
-        mutationData.fields[field] !== 'scalar' &&
-        mutationData.fields[field] !== 'meta'
+        mutationData.fields[field] !== "scalar" &&
+        mutationData.fields[field] !== "meta"
       ) {
         respObj.data[mutationData.name][field] = [];
       }
@@ -191,8 +186,8 @@ export default class BrowserCache {
   getBadHashes() {
     const badHashes = new Set();
     for (let key in this.storage) {
-      if (key === 'ROOT_QUERY' || key === 'ROOT_MUTATION') continue;
-      if (this.storage[key] === 'DELETED') {
+      if (key === "ROOT_QUERY" || key === "ROOT_MUTATION") continue;
+      if (this.storage[key] === "DELETED") {
         badHashes.add(key);
         delete this.storage[key];
       }
@@ -203,7 +198,7 @@ export default class BrowserCache {
   // go through root queries, remove all instances of bad hashes, add remaining hashes into goodHashes set
   rootQueryCleaner(badHashes) {
     const goodHashes = new Set();
-    const rootQuery = this.storage['ROOT_QUERY'];
+    const rootQuery = this.storage["ROOT_QUERY"];
     for (let key in rootQuery) {
       if (Array.isArray(rootQuery[key])) {
         rootQuery[key] = rootQuery[key].filter((x) => !badHashes.has(x));
@@ -221,17 +216,17 @@ export default class BrowserCache {
   // Go through the cache, check good hashes for any nested hashes and add them to goodHashes set
   getGoodHashes(badHashes, goodHashes) {
     for (let key in this.storage) {
-      if (key === 'ROOT_QUERY' || key === 'ROOT_MUTATION') continue;
+      if (key === "ROOT_QUERY" || key === "ROOT_MUTATION") continue;
       for (let i in this.storage[key]) {
         if (Array.isArray(this.storage[key][i])) {
           for (let el of this.storage[key][i]) {
-            if (el.includes('~') && !badHashes.has(el)) {
+            if (el.includes("~") && !badHashes.has(el)) {
               goodHashes.add(el);
             }
           }
-        } else if (typeof this.storage[key][i] === 'string') {
+        } else if (typeof this.storage[key][i] === "string") {
           if (
-            this.storage[key][i].includes('~') &&
+            this.storage[key][i].includes("~") &&
             !badHashes.has(this.storage[key][i])
           ) {
             goodHashes.add(this.storage[key][i]);
@@ -245,16 +240,16 @@ export default class BrowserCache {
   // Remove inaccessible hashes by checking if they are in goodhashes set or not
   removeInaccessibleHashes(badHashes, goodHashes) {
     for (let key in this.storage) {
-      if (key === 'ROOT_QUERY' || key === 'ROOT_MUTATION') continue;
+      if (key === "ROOT_QUERY" || key === "ROOT_MUTATION") continue;
       if (!goodHashes.has(key)) delete this.storage[key];
       for (let i in this.storage[key]) {
         if (Array.isArray(this.storage[key][i])) {
           this.storage[key][i] = this.storage[key][i].filter(
-            (x) => !badHashes.has(x)
+            (x) => !badHashes.has(x),
           );
-        } else if (typeof this.storage[key][i] === 'string') {
+        } else if (typeof this.storage[key][i] === "string") {
           if (
-            this.storage[key][i].includes('~') &&
+            this.storage[key][i].includes("~") &&
             badHashes.has(this.storage[key][i])
           ) {
             delete this.storage[key][i];
@@ -290,14 +285,14 @@ export default class BrowserCache {
   }
 
   writeWholeQuery(queryStr, respObj) {
-    const hash = queryStr.replace(/\s/g, '');
+    const hash = queryStr.replace(/\s/g, "");
     this.cacheWrite(ROOT_QUERY[hash], respObj);
     return respObj;
   }
 
   readWholeQuery(queryStr) {
-    const hash = queryStr.replace(/\s/g, '');
-    const root = this.cacheRead('ROOT_QUERY');
+    const hash = queryStr.replace(/\s/g, "");
+    const root = this.cacheRead("ROOT_QUERY");
     if (root[hash]) return { data: root[hash] };
     return undefined;
   }
@@ -306,30 +301,30 @@ export default class BrowserCache {
   async populateAllHashes(allHashesFromQuery, fields) {
     // include the hashname for each hash
     if (!allHashesFromQuery.length) return [];
-    const hyphenIdx = allHashesFromQuery[0].indexOf('~');
+    const hyphenIdx = allHashesFromQuery[0].indexOf("~");
     const typeName = allHashesFromQuery[0].slice(0, hyphenIdx);
     return allHashesFromQuery.reduce(async (acc, hash) => {
       // for each hash from the input query, build the response object
       const readVal = await this.cacheRead(hash);
       // return undefine if hash has been garbage collected
       if (readVal === undefined) return undefined;
-      if (readVal === 'DELETED') return acc;
+      if (readVal === "DELETED") return acc;
       const dataObj = {};
       for (const field in fields) {
-        if (readVal[field] === 'DELETED') continue;
+        if (readVal[field] === "DELETED") continue;
         // for each field in the fields input query, add the corresponding value from the cache if the field is not another array of hashs
-        if (readVal[field] === undefined && field !== '__typename') {
+        if (readVal[field] === undefined && field !== "__typename") {
           return undefined;
-        } else if (typeof fields[field] !== 'object') {
+        } else if (typeof fields[field] !== "object") {
           // add the typename for the type
-          if (field === '__typename') {
+          if (field === "__typename") {
             dataObj[field] = typeName;
           } else dataObj[field] = readVal[field];
         } else {
           // case where the field from the input query is an array of hashes, recursively invoke populateAllHashes
           dataObj[field] = await this.populateAllHashes(
             readVal[field],
-            fields[field]
+            fields[field],
           );
           if (dataObj[field] === undefined) return undefined;
         }

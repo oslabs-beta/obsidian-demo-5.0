@@ -220,7 +220,7 @@ export async function ObsidianRouter<T>({
               // write to Redis
           }
 
-          // await cachePrimaryFields(normalized, body.query, ) //[Movie7, Movie15, Movie21]: 
+          // await cachePrimaryFields(normalized, body.query, map) //[Movie7, Movie15, Movie21]: 
         }
 
         var t1 = performance.now();
