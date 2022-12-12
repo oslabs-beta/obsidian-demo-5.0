@@ -18,10 +18,10 @@ const config = {
   database: Deno.env.get('PG_DATABASE'),
   password: Deno.env.get('PG_PASSWORD'),
   hostname: Deno.env.get('PG_HOSTNAME'),
-	host_type: "tcp",
+  host_type: 'tcp',
   port: pgPort,
 };
- 
+
 // parallel connections so we can have concurrent access (maybe not needed)
 const POOL_CONNECTIONS = 10; // breaks at 10+ due to ElephantSQL
 
@@ -71,7 +71,6 @@ export async function createDb() {
       text: countriesData,
       args: [],
     });
-    client.release();
   } catch (err) {
     console.log(err);
   }

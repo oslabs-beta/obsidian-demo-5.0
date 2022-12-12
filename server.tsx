@@ -1,4 +1,10 @@
-import { Application, Router, send, ObsidianRouter, gql } from './serverDeps.ts';
+import {
+  Application,
+  Router,
+  send,
+  ObsidianRouter,
+  gql,
+} from './serverDeps.ts';
 import App from './client/app.tsx';
 import { React, ReactDOM, ReactDOMServer } from './deps.ts';
 import { staticFileMiddleware } from './staticFileMiddleware.ts';
@@ -8,16 +14,16 @@ import { staticFileMiddleware } from './staticFileMiddleware.ts';
 import resolvers from './server/resolvers.ts';
 import types from './server/schema.ts';
 import { createDb } from './server/db/db.ts';
-import { oakCors } from "https://deno.land/x/cors/mod.ts";
+import { oakCors } from 'https://deno.land/x/cors/mod.ts';
 
-import { emit } from "https://deno.land/x/emit/mod.ts";
-import { bundle } from "https://deno.land/x/emit/mod.ts";
+import { emit } from 'https://deno.land/x/emit/mod.ts';
+import { bundle } from 'https://deno.land/x/emit/mod.ts';
 
 const app = new Application();
 const port: number = 3000;
 
 // specify route to create bundle
-const jsBundlePath = '/main.js'
+const jsBundlePath = '/main.js';
 
 // const { files, diagnostics } = await Deno.emit('./server/client.tsx', {
 // 	check: false,
@@ -26,7 +32,7 @@ const jsBundlePath = '/main.js'
 // })
 const result = await bundle('./server/client.tsx');
 const { code } = result;
-// console.log(code); 
+// console.log(code);
 
 createDb();
 
@@ -35,11 +41,11 @@ createDb();
 
 const router = new Router();
 
-router.get("/", (context: any) => {
-	const app = (ReactDOMServer as any).renderToString(<App />)
-	context.response.type = 'text/html';
-	context.response.body =
-	`<!DOCTYPE html>
+router
+  .get('/', (context: any) => {
+    const app = (ReactDOMServer as any).renderToString(<App />);
+    context.response.type = 'text/html';
+    context.response.body = `<!DOCTYPE html>
 	<html lang="en">
 	<head>
 	<meta charset="UTF-8">
@@ -54,16 +60,16 @@ router.get("/", (context: any) => {
 	<script src=${jsBundlePath}></script>
 	</body>
 	</html>`;
-})
-.get(jsBundlePath, (context: any) => {
-	context.response.type = 'application/javascript';
-	context.response.body = code;
-})
+  })
+  .get(jsBundlePath, (context: any) => {
+    context.response.type = 'application/javascript';
+    context.response.body = code;
+  });
 
-app.addEventListener("error", (event: any) => {
+app.addEventListener('error', (event: any) => {
   console.error(event.error);
 });
-		
+
 app.use(oakCors());
 app.use(router.routes());
 app.use(staticFileMiddleware);
@@ -87,4 +93,4 @@ const GraphQLRouter = await ObsidianRouter<ObsRouter>({
 app.use(GraphQLRouter.routes(), GraphQLRouter.allowedMethods());
 
 app.listen({ port });
-console.log(`Server is running on port ${port}`);
+console.log(`Server ist running on port ${port}`);

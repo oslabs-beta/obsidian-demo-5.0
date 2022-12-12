@@ -2,15 +2,16 @@ import { graphql } from 'https://cdn.pika.dev/graphql@15.0.0';
 import { renderPlaygroundPage } from 'https://deno.land/x/oak_graphql@0.6.2/graphql-playground-html/render-playground-html.ts';
 import { makeExecutableSchema } from 'https://deno.land/x/oak_graphql@0.6.2/graphql-tools/schema/makeExecutableSchema.ts';
 import { Cache } from './quickCache.js';
+import LFUCache from './Browser/lfuBrowserCache.js';
 import queryDepthLimiter from './DoSSecurity.ts';
 import { restructure } from './restructure.ts';
-import { rebuildFromQuery } from './rebuild.js'
-import { normalizeObject } from './normalize.ts'
-import { transformResponse, detransformResponse } from './transformResponse.ts'
-import { isMutation, invalidateCache } from './invalidateCacheCheck.ts'
+import { rebuildFromQuery } from './rebuild.js';
+import { normalizeObject } from './normalize.ts';
+import { transformResponse, detransformResponse } from './transformResponse.ts';
+import { isMutation, invalidateCache } from './invalidateCacheCheck.ts';
 
 interface Constructable<T> {
-  new(...args: any): T & OakRouter;
+  new (...args: any): T & OakRouter;
 }
 
 interface OakRouter {
@@ -46,9 +47,9 @@ export interface ResolversProps {
 export let redisPortExport: number = 6379;
 
 /**
- * 
- * @param param0 
- * @returns 
+ *
+ * @param param0
+ * @returns
  */
 export async function ObsidianRouter<T>({
   Router,
@@ -64,7 +65,7 @@ export async function ObsidianRouter<T>({
   maxQueryDepth = 0,
   useQueryCache = true,
   useRebuildCache = true,
-  customIdentifier = ["id", "__typename"],
+  customIdentifier = ['id', '__typename'],
 }: ObsidianRouterOptions<T>): Promise<T> {
   redisPortExport = redisPort;
   const router = new Router();
@@ -72,7 +73,8 @@ export async function ObsidianRouter<T>({
   // const cache = new LFUCache(50); // If using LFU Browser Caching, uncomment line
   const cache = new Cache(); // If using Redis caching, uncomment line
   cache.cacheClear();
-  if (policy || maxmemory) { // set redis configurations
+  if (policy || maxmemory) {
+    // set redis configurations
     cache.configSet('maxmemory-policy', policy);
     cache.configSet('maxmemory', maxmemory);
   }
@@ -86,10 +88,14 @@ export async function ObsidianRouter<T>({
       let body = await request.body().value;
       if (maxQueryDepth) queryDepthLimiter(body.query, maxQueryDepth); // If a securty limit is set for maxQueryDepth, invoke queryDepthLimiter, which throws error if query depth exceeds maximum
       body = { query: restructure(body) }; // Restructre gets rid of variables and fragments from the query
-      let cacheQueryValue = await cache.read(body.query)
-      // Is query in cache? 
+      console.log(`Obsidian.ts, router.post(), line 91: `, body);
+      let cacheQueryValue = await cache.read(body.query);
+      // Is query in cache?
       if (useCache && useQueryCache && cacheQueryValue) {
-        let detransformedCacheQueryValue = await detransformResponse(body.query, cacheQueryValue)
+        let detransformedCacheQueryValue = await detransformResponse(
+          body.query,
+          cacheQueryValue
+        );
         if (!detransformedCacheQueryValue) {
           // cache was evicted if any partial cache is missing, which causes detransformResponse to return undefined
           cacheQueryValue = undefined;
@@ -99,12 +105,12 @@ export async function ObsidianRouter<T>({
           const t1 = performance.now();
           console.log(
             '%c Obsidian retrieved data from cache and took ' +
-            (t1 - t0) +
-            ' milliseconds.', "background: #222; color: #00FF00"
+              (t1 - t0) +
+              ' milliseconds',
+            'background: #222; color: #00FF00'
           );
         }
-
-      };      // If not in cache: 
+      } // If not in cache:
       if (useCache && useQueryCache && !cacheQueryValue) {
         const gqlResponse = await (graphql as any)(
           schema,
@@ -114,14 +120,22 @@ export async function ObsidianRouter<T>({
           body.variables || undefined,
           body.operationName || undefined
         );
-        const normalizedGQLResponse = normalizeObject(gqlResponse, customIdentifier);
+        const normalizedGQLResponse = normalizeObject(
+          gqlResponse,
+          customIdentifier
+        );
+        // console.log(normalizedGQLResponse);
         if (isMutation(body)) {
           const queryString = await request.body().value;
           invalidateCache(normalizedGQLResponse, queryString.query);
         }
         // If read query: run query, normalize GQL response, transform GQL response, write to cache, and write pieces of normalized GQL response objects
         else {
-          const transformedGQLResponse = transformResponse(gqlResponse, customIdentifier);
+          // object: {~plant~1: {name:...}, ~plant~2: {}...}
+          const transformedGQLResponse = transformResponse(
+            gqlResponse,
+            customIdentifier
+          );
           await cache.write(body.query, transformedGQLResponse, false);
           for (const key in normalizedGQLResponse) {
             await cache.cacheWriteObject(key, normalizedGQLResponse[key]);
@@ -132,8 +146,9 @@ export async function ObsidianRouter<T>({
         const t1 = performance.now();
         console.log(
           '%c Obsidian received new data and took ' +
-          (t1 - t0) +
-          ' milliseconds', 'background: #222; color: #FFFF00'
+            (t1 - t0) +
+            ' milliseconds',
+          'background: #222; color: #FFFF00'
         );
       }
     } catch (error) {
@@ -157,14 +172,13 @@ export async function ObsidianRouter<T>({
       const prefersHTML = request.accepts('text/html');
       const optionsObj: any = {
         'schema.polling.enable': false, // enables automatic schema polling
-      }
+      };
 
       if (prefersHTML) {
-
         const playground = renderPlaygroundPage({
           endpoint: request.url.origin + path,
           subscriptionEndpoint: request.url.origin,
-          settings: optionsObj
+          settings: optionsObj,
         });
         response.status = 200;
         response.body = playground;
